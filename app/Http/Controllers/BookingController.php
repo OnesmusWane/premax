@@ -7,7 +7,10 @@ use App\Models\Service;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Carbon\Carbon;
-
+use App\Models\Customer;
+use App\Models\Vehicle;
+use App\Models\BookingSource;
+use App\Models\BookingStatus;
 class BookingController extends Controller
 {
     /**
@@ -35,70 +38,93 @@ class BookingController extends Controller
      *   - The homepage quick-booking form
      *   - The full multi-step booking page
      */
-    public function store(Request $request)
-    {
-        $validated = $request->validate([
-            // Service
-            'service_id'         => ['nullable', 'exists:services,id'],
-            'service'            => ['required', 'string', 'max:255'],
+   public function store(Request $request)
+{
+    $validated = $request->validate([
+        'service_id'  => ['nullable', 'exists:services,id'],
+        'service'     => ['required', 'string', 'max:255'],
+        'reg'         => ['required', 'string', 'max:20'],
+        'make'        => ['nullable', 'string', 'max:100'],
+        'date'        => ['required', 'date', 'after_or_equal:today'],
+        'time'        => ['required', 'string', 'max:20'],
+        'name'        => ['required', 'string', 'max:150'],
+        'phone'       => ['required', 'string', 'max:20'],
+        'email'       => ['nullable', 'email', 'max:150'],
+        'notes'       => ['nullable', 'string', 'max:1000'],
+    ]);
 
-            // Vehicle
-            'reg'                => ['required', 'string', 'max:20'],
-            'make'               => ['nullable', 'string', 'max:100'],
+    // ── 1. Resolve or create Customer (by phone number) ───────────────────
+    $customer = Customer::updateOrCreate(
+        ['phone' => $validated['phone']], 
+        [
+            'name'         => $validated['name'],
+            'email'        => $validated['email'] ?? null,
+            'member_since' => now()->toDateString(), 
+            'is_active'    => true,
+        ]
+    );
 
-            // Schedule
-            'date'               => ['required', 'date', 'after_or_equal:today'],
-            'time'               => ['required', 'string', 'max:20'],
-
-            // Customer
-            'name'               => ['required', 'string', 'max:150'],
-            'phone'              => ['required', 'string', 'max:20'],
-            'email'              => ['nullable', 'email', 'max:150'],
-
-            // Optional extras
-            'notes'              => ['nullable', 'string', 'max:1000'],
-        ]);
-
-        // Resolve the service model (may be null for free-text from quick form)
-        $service = isset($validated['service_id'])
-            ? Service::find($validated['service_id'])
-            : Service::where('name', $validated['service'])->first();
-
-        // Build scheduled_at datetime
-        $scheduledAt = Carbon::parse($validated['date'] . ' ' . $validated['time']);
-
-        $booking = Booking::create([
-            'reference'                  => Booking::generateReference(),
-            'service_id'                 => $service?->id,
-            'service_name'               => $service?->name ?? $validated['service'],
-            'vehicle_reg'                => strtoupper(trim($validated['reg'])),
-            'vehicle_make_model'         => $validated['make'] ?? null,
-            'booking_date'               => $validated['date'],
-            'booking_time'               => $validated['time'],
-            'scheduled_at'               => $scheduledAt,
-            'customer_name'              => $validated['name'],
-            'customer_phone'             => $validated['phone'],
-            'customer_email'             => $validated['email'] ?? null,
-            'source'                     => 'website',
-            'status'                     => 'pending',
-            'customer_notes'             => $validated['notes'] ?? null,
-            'estimated_duration_minutes' => $service?->duration_minutes,
-            'price_quoted'               => $service?->price_from,
-        ]);
-
-        return redirect()
-            ->route('booking.success', ['ref' => $booking->reference])
-            ->with('booking', $booking);
+    // Don't overwrite member_since if customer already exists
+    if ($customer->wasRecentlyCreated === false && !$customer->member_since) {
+        $customer->update(['member_since' => now()->toDateString()]);
     }
+
+    // ── 2. Resolve or create Vehicle (by registration) ────────────────────
+    $reg     = strtoupper(trim($validated['reg']));
+    $vehicle = Vehicle::updateOrCreate(
+        ['registration' => $reg],                      // match by reg
+        [
+            'customer_id'     => $customer->id,        // link to customer
+            'make'            => $validated['make'] ?? 'Unknown',
+            'model'           => 'Unknown',            // not collected on quick form
+            'last_service_at' => now(),
+        ]
+    );
+
+    // If vehicle exists but belongs to different customer — keep original owner
+    // but update last_service_at
+    if (!$vehicle->wasRecentlyCreated) {
+        $vehicle->update(['last_service_at' => now()]);
+    }
+
+    // ── 3. Resolve Service ────────────────────────────────────────────────
+    $service = isset($validated['service_id'])
+        ? Service::find($validated['service_id'])
+        : Service::where('name', $validated['service'])->first();
+
+    // ── 4. Resolve BookingSource ──────────────────────────────────────────
+    $source = BookingSource::where('slug', 'website')->first();
+
+    // ── 5. Resolve BookingStatus (pending) ───────────────────────────────
+    $status = BookingStatus::where('slug', 'pending')->first();
+
+    // ── 6. Create Booking ─────────────────────────────────────────────────
+    $booking = Booking::create([
+        'reference'         => Booking::generateReference(),
+        'service_id'        => $service?->id,
+        'vehicle_id'        => $vehicle->id,
+        'customer_id'       => $customer->id,
+        'booking_source_id' => $source?->id,
+        'booking_status_id' => $status?->id,
+        'scheduled_at'      => Carbon::parse($validated['date'] . ' ' . $validated['time']),
+        'customer_notes'    => $validated['notes'] ?? null,
+    ]);
+
+    return redirect()
+        ->route('booking.success', ['ref' => $booking->reference])
+        ->with('booking', $booking);
+}
 
     /**
      * Booking success / confirmation page.
      */
-    public function success(Request $request)
-    {
-        $ref     = $request->query('ref');
-        $booking = Booking::where('reference', $ref)->firstOrFail();
+   public function success(Request $request)
+        {
+            $ref     = $request->query('ref');
+            $booking = Booking::with(['service', 'vehicle', 'customer'])
+                ->where('reference', $ref)
+                ->firstOrFail();
 
-        return view('pages.booking-success', compact('booking'));
-    }
+            return view('pages.booking-success', compact('booking'));
+        }
 }

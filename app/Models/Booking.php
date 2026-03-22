@@ -13,34 +13,18 @@ class Booking extends Model
     protected $fillable = [
         'reference',
         'service_id',
-        'service_name',
-        'vehicle_reg',
-        'vehicle_make_model',
-        'booking_date',
-        'booking_time',
+        'vehicle_id',
         'scheduled_at',
-        'customer_name',
-        'customer_phone',
-        'customer_email',
-        'source',
-        'status',
+        'customer_id',
+        'booking_source_id',
+        'booking_status_id',
         'cancellation_reason',
         'customer_notes',
         'staff_notes',
-        'estimated_duration_minutes',
-        'price_quoted',
-        'price_charged',
-        'confirmed_at',
-        'completed_at',
-        'cancelled_at',
     ];
 
     protected $casts = [
-        'booking_date'  => 'date',
-        'scheduled_at'  => 'datetime',
-        'confirmed_at'  => 'datetime',
-        'completed_at'  => 'datetime',
-        'cancelled_at'  => 'datetime',
+       'scheduled_at' => 'datetime',
     ];
 
     // ── Relationships ─────────────────────────────────────────────────────
@@ -50,6 +34,15 @@ class Booking extends Model
         return $this->belongsTo(Service::class);
     }
 
+     public function vehicle(): BelongsTo
+    {
+        return $this->belongsTo(Vehicle::class);
+    }
+
+     public function customer(): BelongsTo
+    {
+        return $this->belongsTo(Customer::class);
+    }
     // ── Scopes ────────────────────────────────────────────────────────────
 
     public function scopePending($query)   { return $query->where('status', 'pending'); }
