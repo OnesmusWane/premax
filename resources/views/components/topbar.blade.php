@@ -3,7 +3,7 @@
 {{-- Data fetched automatically from contact_information table (cached 60 min) --}}
 
 @if ($contact)
-<div id="topbar" class="bg-custom-secondary text-gray-400 text-xs sticky top-0 z-50 overflow-hidden hidden md:block">
+<div id="topbar" class="bg-custom-secondary text-gray-400 text-xs relative z-30 overflow-hidden hidden md:block">
     <div class="max-w-7xl mx-auto px-6 py-2 flex items-center justify-between flex-wrap gap-1">
 
         {{-- ── Left: Phone · Address · Hours ── --}}
