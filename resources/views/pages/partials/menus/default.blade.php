@@ -31,7 +31,7 @@
     #mobile-drawer { transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1); }
 </style>
 
-<header>
+<header class="relative z-40">
 
     {{-- ── TOP BAR ── --}}
  <x-topbar />
@@ -62,6 +62,13 @@
                        class="nav-link inline-block px-3 py-2 text-sm font-medium rounded-md no-underline transition-colors duration-200
                               {{ request()->is('services*') ? 'text-custom-primary active' : 'text-gray-700 hover:text-custom-primary' }}">
                         Services
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ url('/gallery') }}"
+                       class="nav-link inline-block px-3 py-2 text-sm font-medium rounded-md no-underline transition-colors duration-200
+                              {{ request()->is('gallery*') ? 'text-custom-primary active' : 'text-gray-700 hover:text-custom-primary' }}">
+                        Gallery
                     </a>
                 </li>
                 <li>
@@ -147,6 +154,13 @@
                    class="flex items-center px-4 py-3 text-base font-medium rounded-xl no-underline transition-colors duration-200
                           {{ request()->is('services*') ? 'bg-red-50 text-custom-primary font-semibold' : 'text-gray-900 hover:bg-red-50 hover:text-custom-primary' }}">
                     Services
+                </a>
+            </li>
+            <li>
+                <a href="{{ url('/gallery') }}"
+                   class="flex items-center px-4 py-3 text-base font-medium rounded-xl no-underline transition-colors duration-200
+                          {{ request()->is('gallery*') ? 'bg-red-50 text-custom-primary font-semibold' : 'text-gray-900 hover:bg-red-50 hover:text-custom-primary' }}">
+                    Gallery
                 </a>
             </li>
             <li>

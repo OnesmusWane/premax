@@ -7,7 +7,9 @@ export default defineConfig({
         laravel({
             input: ['resources/css/app.css',
                     'resources/js/app.js',
-                    'resources/js/booking.ts'
+                    'resources/js/booking.ts',
+                    'resources/js/feedback.ts',
+                    'resources/js/gallery.ts'
                 ],
             refresh: true,
         }),

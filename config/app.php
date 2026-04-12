@@ -53,6 +53,7 @@ return [
     */
 
     'url' => env('APP_URL', 'http://localhost'),
+    'media_base_url' => env('MEDIA_BASE_URL', env('STORAGE_URL', env('APP_URL') . '/storage')),
 
     /*
     |--------------------------------------------------------------------------
