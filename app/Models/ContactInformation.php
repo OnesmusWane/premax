@@ -129,7 +129,46 @@ class ContactInformation extends Model
         return Attribute::make(
             get: function () {
                 $number = $this->formatE164($this->phone_whatsapp ?? $this->phone_primary);
-                return $number ? 'https://wa.me/' . ltrim($number, '+') : null;
+                return $number ? $this->buildWhatsappUrl($number) : null;
+            }
+        );
+    }
+
+    /**
+     * WhatsApp-ready contact options for UI selectors.
+     *
+     * @return array<int, array{label: string, number: string, e164: string, url: string}>
+     */
+    protected function whatsappContacts(): Attribute
+    {
+        return Attribute::make(
+            get: function () {
+                $candidates = [
+                    ['label' => 'WhatsApp', 'number' => $this->phone_whatsapp],
+                    ['label' => 'Primary line', 'number' => $this->phone_primary],
+                    ['label' => 'Secondary line', 'number' => $this->phone_secondary],
+                ];
+
+                $contacts = [];
+                $seen = [];
+
+                foreach ($candidates as $candidate) {
+                    $e164 = $this->formatE164($candidate['number']);
+
+                    if (! $e164 || isset($seen[$e164])) {
+                        continue;
+                    }
+
+                    $seen[$e164] = true;
+                    $contacts[] = [
+                        'label' => $candidate['label'],
+                        'number' => $candidate['number'],
+                        'e164' => $e164,
+                        'url' => $this->buildWhatsappUrl($e164),
+                    ];
+                }
+
+                return $contacts;
             }
         );
     }
@@ -197,6 +236,16 @@ class ContactInformation extends Model
     {
         if (! $time) return null;
         return Carbon::createFromFormat('H:i', $time)->format('g:ia'); // 7:30am
+    }
+
+    private function buildWhatsappUrl(string $number): string
+    {
+        return 'https://wa.me/' . ltrim($number, '+') . '?text=' . urlencode($this->defaultWhatsappMessage());
+    }
+
+    private function defaultWhatsappMessage(): string
+    {
+        return "Hello Premax Autocare, I'd like to make an inquiry about your services. Please assist me with more information.";
     }
 
     // ── Scopes ────────────────────────────────────────────────────────────

@@ -19,6 +19,8 @@
 		@show
 	</div>
 
+	<x-whatsapp-float />
+
 
 	{{-- javascript --}}
 	@yield('scripts')
