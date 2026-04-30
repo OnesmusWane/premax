@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Booking;
+use App\Models\ContactInformation;
 use App\Models\Service;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
@@ -124,7 +125,12 @@ class BookingController extends Controller
             $booking = Booking::with(['service', 'vehicle', 'customer'])
                 ->where('reference', $ref)
                 ->firstOrFail();
+            $contact = Cache::remember('contact.primary', now()->addMinutes(60), function () {
+                return ContactInformation::where('is_primary', true)
+                    ->where('is_active', true)
+                    ->first();
+            });
 
-            return view('pages.booking-success', compact('booking'));
+            return view('pages.booking-success', compact('booking', 'contact'));
         }
 }

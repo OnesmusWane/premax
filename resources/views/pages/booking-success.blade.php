@@ -78,8 +78,8 @@
             </div>
 
             {{-- WhatsApp confirmation prompt --}}
-            @if($booking->customer?->phone)
-            <a href="https://wa.me/254742091794?text=Hi+Premax%2C+I+just+booked+a+{{ urlencode($booking->service?->name ?? 'service') }}+appointment.+My+reference+is+{{ $booking->reference }}."
+            @if($contact?->phone_whatsapp)
+            <a href="https://wa.me/{{ ltrim($contact->phone_whatsapp_e164, '+') }}?text=Hi+Premax%2C+I+just+booked+a+{{ urlencode($booking->service?->name ?? 'service') }}+appointment.+My+reference+is+{{ $booking->reference }}."
                target="_blank" rel="noopener noreferrer"
                class="flex items-center justify-center gap-2 w-full bg-green-500 hover:bg-green-600 text-white font-bold text-sm py-3 rounded-xl transition-all duration-200 text-center mb-3">
                 <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
