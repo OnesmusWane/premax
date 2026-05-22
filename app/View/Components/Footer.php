@@ -19,26 +19,26 @@ class Footer extends Component
     public function __construct()
     {
         // Contact info — shared with topbar, same cache key
-        $this->contact = Cache::remember('contact.primary', now()->addMinutes(60), function () {
+        $this->contact = rescue(fn () => Cache::remember('contact.primary', now()->addMinutes(60), function () {
             return ContactInformation::where('is_primary', true)
                 ->where('is_active', true)
                 ->first();
-        });
+        }), null, false);
 
         // Top 5 service categories for the footer links column
-        $this->categories = Cache::remember('footer.categories', now()->addMinutes(60), function () {
+        $this->categories = rescue(fn () => Cache::remember('footer.categories', now()->addMinutes(60), function () {
             return ServiceCategory::where('is_active', true)
                 ->orderBy('sort_order')
                 ->limit(5)
                 ->get(['id', 'name', 'slug']);
-        });
+        }), collect(), false);
 
         // Legal pages for footer bottom bar links
-        $this->legalPages = Cache::remember('footer.legal', now()->addHours(6), function () {
+        $this->legalPages = rescue(fn () => Cache::remember('footer.legal', now()->addHours(6), function () {
             return LegalPage::active()
                 ->orderBy('id')
                 ->get(['title', 'slug']);
-        });
+        }), collect(), false);
     }
 
     public function render(): View|Closure|string

@@ -15,11 +15,11 @@ class WhatsappFloat extends Component
 
     public function __construct()
     {
-        $this->contact = Cache::remember('contact.primary', now()->addMinutes(60), function () {
+        $this->contact = rescue(fn () => Cache::remember('contact.primary', now()->addMinutes(60), function () {
             return ContactInformation::where('is_primary', true)
                 ->where('is_active', true)
                 ->first();
-        });
+        }), null, false);
 
         $this->contacts = $this->contact?->whatsapp_contacts ?? [];
     }

@@ -1,271 +1,195 @@
+@php
+    use App\Models\Service;
+    use App\Models\Review;
+    use Illuminate\Support\Facades\Cache;
+
+    $pageTitle = 'Premax Auto Service | Luxury Automotive Studio Nairobi';
+    $pageDescription = 'Premium diagnostics, detailing, maintenance, bodywork and concierge vehicle care for luxury marques in Nairobi.';
+
+    $featuredServices = rescue(fn () =>
+        Cache::remember('home.featured-services.premium', now()->addMinutes(30), fn () =>
+            Service::with('serviceCategory')->where('is_active', true)->orderByDesc('is_popular')->orderBy('sort_order')->take(6)->get()
+        ),
+        collect()
+    );
+
+    $testimonial = rescue(fn () =>
+        Cache::remember('home.featured-review.premium', now()->addMinutes(30), fn () =>
+            Review::where('status', 'approved')->where('show_on_website', true)->orderByDesc('is_featured')->latest('reviewed_at')->first()
+        ),
+        null
+    );
+
+    $brands = ['BMW', 'MERCEDES-BENZ', 'PORSCHE', 'LAND ROVER', 'AUDI', 'RANGE ROVER', 'JAGUAR', 'LEXUS', 'VOLVO'];
+@endphp
+
 @extends('layouts.default-menu-page')
+
 @section('content')
-
-{{-- ═══════════════════════════════════════════
-    PREMAX AUTOCARE — HOME PAGE
-    Sections: Hero → Services → How It Works → Booking → Testimonials
-═══════════════════════════════════════════ --}}
-
-<style>
-    /* Hero background image with dark overlay */
-    #hero {
-        background-image: linear-gradient(to right, rgba(0,0,0,0.92) 40%, rgba(0,0,0,0.35) 100%),
-                          url('{{ asset("assets/images/carwash.avif") }}');
-        background-size: cover;
-        background-position: center;
-    }
-
-    /* Connector line between How It Works steps */
-    .step-connector {
-        position: absolute;
-        top: 40px;
-        left: calc(50% + 44px);
-        right: calc(-50% + 44px);
-        height: 1px;
-        background: linear-gradient(to right, #fca5a5, #fca5a5);
-        opacity: 0.4;
-    }
-
-    /* Form input focus ring in brand color */
-    .booking-input:focus {
-        outline: none;
-        border-color: #D31E24;
-        box-shadow: 0 0 0 3px rgba(211,30,36,0.15);
-    }
-</style>
-
-{{-- ══════════════════════════════════════
-     1. HERO
-══════════════════════════════════════ --}}
-<section id="hero" class="min-h-[92vh] flex items-center">
-     <!-- <div class="absolute inset-0 
-        bg-[radial-gradient(#d4d4d8_1px,transparent_1px)] 
-        [background-size:22px_22px] 
-        opacity-40">
-    </div> -->
-    <div class="max-w-7xl mx-auto px-6 py-20 w-full">
-        <div class="max-w-xl flex flex-col gap-6">
-
-            {{-- Badge --}}
-            <div class="inline-flex items-center gap-2 bg-custom-primary/20 border border-custom-primary/40 text-custom-primary text-xs font-semibold px-3.5 py-1.5 rounded-full w-fit">
-                <svg class="w-3.5 h-3.5 fill-custom-primary" viewBox="0 0 24 24">
-                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-                </svg>
-                Top Rated Auto Care in Nairobi
-            </div>
-
-            {{-- Heading --}}
-            <h1 class="text-4xl md:text-5xl lg:text-6xl font-extrabold text-white leading-tight tracking-tight">
-                Premax Autocare &<br>
-                <span class="text-custom-primary">Diagnostic Services</span>
-            </h1>
-
-            {{-- Sub --}}
-            <p class="text-gray-300 text-base leading-relaxed max-w-md">
-                Experience premium vehicle care with our expert team. From quick washes to full detailing and mechanical services, we treat your car like our own.
-            </p>
-
-            {{-- CTAs --}}
-            <div class="flex items-center gap-3 flex-wrap mt-2">
-                <a href="{{ url('/booking') }}"
-                   class="inline-flex items-center gap-2 bg-custom-primary hover:bg-red-800 text-white font-bold text-sm
-                          px-7 py-3.5 rounded-lg no-underline transition-all duration-200
-                          shadow-[0_4px_16px_rgba(211,30,36,0.4)] hover:shadow-[0_6px_24px_rgba(211,30,36,0.5)] hover:-translate-y-px active:translate-y-0">
-                    Book Service
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
-                    </svg>
-                </a>
-                <a href="{{ url('/services') }}"
-                   class="inline-flex items-center gap-2 bg-white/10 hover:bg-white/20 border border-white/20 text-white font-bold text-sm
-                          px-7 py-3.5 rounded-lg no-underline transition-all duration-200 backdrop-blur-sm">
-                    View Services
-                </a>
-            </div>
-
-            {{-- Stats --}}
-            <div class="flex items-center gap-8 pt-4 border-t border-white/15 mt-2">
-                <div>
-                    <div class="text-2xl font-extrabold text-white">10+</div>
-                    <div class="text-xs text-gray-400 mt-0.5">Years Exp.</div>
-                </div>
-                <div class="w-px h-8 bg-white/15"></div>
-                <div>
-                    <div class="text-2xl font-extrabold text-white">5k+</div>
-                    <div class="text-xs text-gray-400 mt-0.5">Cars Serviced</div>
-                </div>
-                <div class="w-px h-8 bg-white/15"></div>
-                <div>
-                    <div class="text-2xl font-extrabold text-white">4.9</div>
-                    <div class="text-xs text-gray-400 mt-0.5">Rating</div>
-                </div>
-            </div>
-
+<section class="relative flex min-h-screen items-center justify-center overflow-hidden">
+    <div class="absolute inset-0">
+        <img src="https://images.unsplash.com/photo-1614200187524-dc4b892acf16?q=80&w=2574&auto=format&fit=crop" alt="Luxury car detail" class="h-full w-full object-cover">
+        <div class="absolute inset-0 bg-black/60"></div>
+        <div class="absolute inset-0 bg-gradient-to-t from-premax-dark via-transparent to-transparent"></div>
+    </div>
+    <div class="relative z-10 mx-auto mt-20 max-w-5xl px-6 text-center">
+        <span class="mb-6 block text-xs font-bold uppercase tracking-[0.3em] text-premax-muted">Nairobi · Est. 2015</span>
+        <h1 class="mb-8 font-display text-5xl font-extrabold leading-[1.1] text-white md:text-7xl lg:text-8xl">
+            Engineering Excellence.<br>
+            <span class="text-white/90">Unrivaled Care.</span>
+        </h1>
+        <p class="mx-auto mb-12 max-w-2xl text-lg font-light leading-relaxed text-premax-platinum/80 md:text-xl">
+            The premier automotive studio for luxury marques. Precision diagnostics, elite detailing, and meticulous maintenance for those who demand perfection.
+        </p>
+        <div class="flex flex-col items-center justify-center gap-5 sm:flex-row">
+            <a href="{{ url('/booking') }}" class="premax-button premax-button-primary w-full sm:w-auto">Book Executive Service</a>
+            <a href="#studio" class="premax-button premax-button-ghost w-full sm:w-auto">Explore The Studio</a>
         </div>
     </div>
+    <a href="#philosophy" class="absolute bottom-10 left-1/2 z-10 flex -translate-x-1/2 flex-col items-center gap-2 text-xs uppercase tracking-widest text-white/50 no-underline">
+        Scroll
+        <svg class="h-5 w-5 animate-bounce" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="m6 9 6 6 6-6"/></svg>
+    </a>
 </section>
 
-
-{{-- ══════════════════════════════════════
-     2. OUR PREMIUM SERVICES
-══════════════════════════════════════ --}}
-<x-featured-services />
-
-
-{{-- ══════════════════════════════════════
-     3. HOW IT WORKS
-══════════════════════════════════════ --}}
-<section class="bg-white py-20">
-    <div class="max-w-7xl mx-auto px-6">
-
-        <div class="text-center max-w-xl mx-auto mb-14">
-            <h2 class="text-3xl md:text-4xl font-extrabold text-gray-900 tracking-tight">How It Works</h2>
-            <p class="mt-3 text-gray-500 text-sm">A simple, hassle-free process to get your car serviced.</p>
-        </div>
-
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-
-            @php
-            $steps = [
-                ['num' => 1, 'title' => 'Book Online',    'desc' => 'Choose your service and preferred time slot.',         'icon' => 'calendar'],
-                ['num' => 2, 'title' => 'Bring Your Car', 'desc' => 'Drop off your vehicle at our secure facility.',        'icon' => 'car'],
-                ['num' => 3, 'title' => 'We Service It',  'desc' => 'Our experts perform the requested services.',          'icon' => 'wrench'],
-                ['num' => 4, 'title' => 'Drive Away',     'desc' => 'Pick up your clean, fully serviced vehicle.',          'icon' => 'thumb'],
-            ];
-            @endphp
-
-            @foreach($steps as $i => $step)
-            <div class="flex flex-col items-center text-center gap-4 relative">
-
-                {{-- Connector line (not on last) --}}
-                @if($i < 3)
-                <div class="hidden lg:block step-connector"></div>
-                @endif
-
-                {{-- Icon circle --}}
-                <div class="w-20 h-20 rounded-full bg-red-50 flex items-center justify-center shrink-0 relative z-10">
-                    @if($step['icon'] === 'calendar')
-                    <svg class="w-8 h-8 text-custom-primary" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
-                        <rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/>
-                    </svg>
-                    @elseif($step['icon'] === 'car')
-                    <svg class="w-8 h-8 text-custom-primary" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M5 17H3a2 2 0 01-2-2v-4l2.5-6h13l2.5 6v4a2 2 0 01-2 2h-2m-9 0a2 2 0 104 0m5 0a2 2 0 104 0"/>
-                    </svg>
-                    @elseif($step['icon'] === 'wrench')
-                    <svg class="w-8 h-8 text-custom-primary" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/>
-                    </svg>
-                    @else
-                    <svg class="w-8 h-8 text-custom-primary" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M14 9V5a3 3 0 00-3-3l-4 9v11h11.28a2 2 0 002-1.7l1.38-9a2 2 0 00-2-2.3H14z"/>
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M7 22H4a2 2 0 01-2-2v-7a2 2 0 012-2h3"/>
-                    </svg>
-                    @endif
+<section id="philosophy" class="bg-premax-dark px-6 py-24 md:py-32">
+    <div class="mx-auto max-w-4xl text-center">
+        <h2 class="mb-16 font-display text-2xl font-medium leading-relaxed text-white md:text-4xl">
+            "We treat every vehicle not as a machine, but as a masterpiece of engineering. Our studio is built on the uncompromising pursuit of perfection."
+        </h2>
+        <div class="grid grid-cols-1 gap-12 border-t border-white/5 pt-16 md:grid-cols-3">
+            @foreach([['10+','Years of Craft'], ['4','Core Marques'], ['100%','OEM Standards']] as [$value, $label])
+                <div class="flex flex-col items-center gap-2">
+                    <span class="font-display text-4xl font-extrabold text-white md:text-5xl">{{ $value }}</span>
+                    <span class="text-sm uppercase tracking-widest text-premax-muted">{{ $label }}</span>
                 </div>
-
-                <div>
-                    <h3 class="text-base font-bold text-gray-900">{{ $step['num'] }}. {{ $step['title'] }}</h3>
-                    <p class="mt-1.5 text-sm text-gray-500 leading-relaxed max-w-[180px] mx-auto">{{ $step['desc'] }}</p>
-                </div>
-            </div>
             @endforeach
-
         </div>
     </div>
 </section>
 
+<section id="services" class="bg-premax-dark px-6 py-24 md:py-32">
+    <div class="mx-auto max-w-7xl">
+        <div class="mb-16 max-w-2xl md:mb-24">
+            <span class="premax-eyebrow mb-4 block">Our Expertise</span>
+            <h2 class="mb-6 font-display text-4xl font-extrabold text-white md:text-5xl">Comprehensive Care.</h2>
+            <p class="text-lg leading-relaxed text-premax-platinum/70">From routine maintenance to complex diagnostics, our studio is equipped to handle every aspect of luxury vehicle care with surgical precision.</p>
+        </div>
+        <div class="grid grid-cols-1 gap-6 md:grid-cols-3">
+            @forelse($featuredServices as $service)
+                <article class="premax-card group flex min-h-[280px] flex-col justify-between p-8 transition-colors hover:border-white/15 {{ $loop->first || $loop->iteration === 5 ? 'md:col-span-2' : '' }}">
+                    <div>
+                        <div class="mb-6 flex h-12 w-12 items-center justify-center rounded-full border border-white/10 bg-premax-dark text-premax-red transition-transform group-hover:-translate-y-1">
+                            @include('components.service-icon', ['icon' => $service->icon ?? 'wrench'])
+                        </div>
+                        <h3 class="mb-3 font-display text-xl font-semibold text-white">{{ $service->name }}</h3>
+                        <p class="text-sm leading-relaxed text-premax-platinum/60">{{ $service->description }}</p>
+                    </div>
+                    <div class="mt-8 flex items-center justify-between gap-4">
+                        <span class="text-xs uppercase tracking-widest text-white/35">{{ $service->serviceCategory?->name }}</span>
+                        <a href="{{ route('booking.index', ['service' => $service->id]) }}" class="text-sm font-medium text-white/55 no-underline transition-colors group-hover:text-white">Book now &rarr;</a>
+                    </div>
+                </article>
+            @empty
+                <div class="premax-card p-8 text-premax-platinum/60 md:col-span-3">Services will appear here once published.</div>
+            @endforelse
+        </div>
+        <div class="mt-16 text-center">
+            <a href="{{ url('/services') }}" class="premax-button premax-button-ghost">View all services &rarr;</a>
+        </div>
+    </div>
+</section>
 
-{{-- ══════════════════════════════════════
-     4. QUICK BOOKING
-══════════════════════════════════════ --}}
-<!-- <section class="bg-custom-primary py-16 px-6">
-    <div class="max-w-4xl mx-auto">
-        <div class="bg-white rounded-3xl overflow-hidden shadow-2xl grid grid-cols-1 lg:grid-cols-2">
-
-            {{-- Left — dark panel --}}
-            <div class="bg-custom-secondary p-8 lg:p-10 flex flex-col gap-6 justify-center">
-                <h2 class="text-2xl md:text-3xl font-extrabold text-white leading-tight">
-                    Ready for a<br>premium service?
-                </h2>
-                <p class="text-gray-400 text-sm leading-relaxed">
-                    Skip the line by booking your appointment online. We'll have a bay ready for you when you arrive.
-                </p>
-                <ul class="flex flex-col gap-3">
-                    @foreach(['No waiting in line', 'Guaranteed time slot', 'Premium service quality'] as $perk)
-                    <li class="flex items-center gap-3 text-sm text-gray-300">
-                        <svg class="w-5 h-5 text-custom-primary shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                        </svg>
-                        {{ $perk }}
-                    </li>
+<section id="studio" class="bg-[#0A0A0A] px-6 py-24 md:py-32">
+    <div class="mx-auto max-w-7xl">
+        <div class="mb-32 grid grid-cols-1 items-center gap-16 lg:grid-cols-2">
+            <div class="relative aspect-[4/3] overflow-hidden rounded-2xl">
+                <img src="https://images.unsplash.com/photo-1635784063858-3610996c9c61?q=80&w=2670&auto=format&fit=crop" alt="Spotless modern workshop bay" class="h-full w-full object-cover">
+                <div class="absolute inset-0 rounded-2xl border border-white/10"></div>
+            </div>
+            <div class="lg:pl-12">
+                <span class="premax-eyebrow mb-4 block">The Facility</span>
+                <h2 class="mb-6 font-display text-3xl font-extrabold text-white md:text-4xl">A Clinical Environment for Automotive Excellence.</h2>
+                <p class="mb-8 text-lg leading-relaxed text-premax-platinum/70">Our studio is designed to rival the assembly lines of the marques we service, with clean work bays, diagnostic discipline, secure storage, and careful handover.</p>
+                <ul class="space-y-4">
+                    @foreach(['OEM-grade diagnostic suites', 'Dust-free detailing bays', 'Secure, monitored storage'] as $item)
+                        <li class="flex items-center text-premax-platinum/80"><span class="mr-4 h-1.5 w-1.5 rounded-full bg-premax-red"></span>{{ $item }}</li>
                     @endforeach
                 </ul>
             </div>
+        </div>
 
-            {{-- Right — form --}}
-            <div class="p-8 lg:p-10 flex flex-col gap-5">
-                <h3 class="text-xl font-extrabold text-gray-900">Quick Booking</h3>
-
-                <form action="{{ url('/booking') }}" method="POST" class="flex flex-col gap-4">
-                    @csrf
-
-                    <div class="grid grid-cols-2 gap-4">
-                        <div class="flex flex-col gap-1.5">
-                            <label class="text-xs font-semibold text-gray-600">Name</label>
-                            <input type="text" name="name" placeholder="John Doe" required
-                                   class="booking-input w-full border border-gray-200 rounded-lg px-3.5 py-2.5 text-sm text-gray-900 placeholder-gray-400 transition-all duration-200">
+        <div class="grid grid-cols-1 items-center gap-16 lg:grid-cols-2">
+            <div class="order-2 lg:order-1 lg:pr-12">
+                <span class="premax-eyebrow mb-4 block">The Experience</span>
+                <h2 class="mb-6 font-display text-3xl font-extrabold text-white md:text-4xl">Seamless from Start to Finish.</h2>
+                <div class="grid grid-cols-1 gap-8 md:grid-cols-4 lg:grid-cols-2">
+                    @foreach([['01','Inquiry'], ['02','Collection'], ['03','Service'], ['04','Delivery']] as [$num, $title])
+                        <div>
+                            <div class="mb-4 flex h-12 w-12 items-center justify-center rounded-full border border-premax-red bg-premax-dark font-display text-sm font-bold text-premax-red shadow-[0_0_15px_rgba(211,47,47,0.2)]">{{ $num }}</div>
+                            <h3 class="mb-2 font-display text-lg font-semibold text-white">{{ $title }}</h3>
+                            <p class="text-sm leading-relaxed text-premax-platinum/60">A precise, documented step in the ownership-care journey.</p>
                         </div>
-                        <div class="flex flex-col gap-1.5">
-                            <label class="text-xs font-semibold text-gray-600">Phone</label>
-                            <input type="tel" name="phone" placeholder="+254 700 000000" required
-                                   class="booking-input w-full border border-gray-200 rounded-lg px-3.5 py-2.5 text-sm text-gray-900 placeholder-gray-400 transition-all duration-200">
-                        </div>
-                    </div>
-
-                    <div class="flex flex-col gap-1.5">
-                        <label class="text-xs font-semibold text-gray-600">Service</label>
-                        <select name="service" required
-                                class="booking-input w-full border border-gray-200 rounded-lg px-3.5 py-2.5 text-sm text-gray-900 bg-white transition-all duration-200 cursor-pointer">
-                            <option>Basic Wash</option>
-                            <option>Full Detailing</option>
-                            <option>Engine Wash</option>
-                            <option>Oil Change</option>
-                            <option>Tire Services</option>
-                            <option>Brake Check</option>
-                        </select>
-                    </div>
-
-                    <div class="grid grid-cols-2 gap-4">
-                        <div class="flex flex-col gap-1.5">
-                            <label class="text-xs font-semibold text-gray-600">Date</label>
-                            <input type="date" name="date" required
-                                   class="booking-input w-full border border-gray-200 rounded-lg px-3.5 py-2.5 text-sm text-gray-900 transition-all duration-200">
-                        </div>
-                        <div class="flex flex-col gap-1.5">
-                            <label class="text-xs font-semibold text-gray-600">Time</label>
-                            <input type="time" name="time" required
-                                   class="booking-input w-full border border-gray-200 rounded-lg px-3.5 py-2.5 text-sm text-gray-900 transition-all duration-200">
-                        </div>
-                    </div>
-
-                    <button type="submit"
-                            class="w-full bg-custom-primary hover:bg-red-800 text-white font-bold text-sm py-3.5 rounded-xl
-                                   transition-all duration-200 shadow-[0_4px_14px_rgba(211,30,36,0.35)] hover:-translate-y-px active:translate-y-0 mt-1">
-                        Confirm Appointment
-                    </button>
-                </form>
+                    @endforeach
+                </div>
             </div>
-
+            <div class="relative order-1 aspect-[4/3] overflow-hidden rounded-2xl lg:order-2">
+                <img src="https://images.unsplash.com/photo-1504222490345-c075b6008014?q=80&w=2670&auto=format&fit=crop" alt="Technician working on luxury car" class="h-full w-full object-cover">
+                <div class="absolute inset-0 rounded-2xl border border-white/10"></div>
+            </div>
         </div>
     </div>
-</section> -->
-<x-quick-booking />
+</section>
 
+<section class="overflow-hidden border-y border-white/5 bg-premax-dark py-24">
+    <div class="mx-auto mb-12 max-w-7xl px-6 text-center">
+        <span class="text-xs font-bold uppercase tracking-[0.3em] text-premax-muted">The Registry</span>
+    </div>
+    <div class="relative flex w-full overflow-hidden">
+        <div class="absolute bottom-0 left-0 top-0 z-10 w-32 bg-gradient-to-r from-premax-dark to-transparent"></div>
+        <div class="absolute bottom-0 right-0 top-0 z-10 w-32 bg-gradient-to-l from-premax-dark to-transparent"></div>
+        <div class="flex w-max animate-[marquee_42s_linear_infinite] hover:[animation-play-state:paused]">
+            @foreach(array_merge($brands, $brands, $brands) as $brand)
+                <div class="flex items-center justify-center px-12 md:px-20">
+                    <span class="whitespace-nowrap font-display text-2xl font-extrabold tracking-wider text-white/30 transition-colors hover:text-white/80 md:text-4xl">{{ $brand }}</span>
+                </div>
+            @endforeach
+        </div>
+    </div>
+</section>
 
-{{-- ══════════════════════════════════════
-     5. TESTIMONIALS
-══════════════════════════════════════ --}}
-<x-testimonials />
+<section class="bg-[#0A0A0A] px-6 py-24 md:py-32">
+    <div class="relative mx-auto max-w-4xl text-center">
+        <div class="absolute -top-12 left-1/2 -translate-x-1/2 select-none font-display text-8xl text-premax-red/20">"</div>
+        <blockquote class="relative z-10 mb-12 font-display text-2xl font-medium leading-relaxed text-white md:text-4xl">
+            "{{ $testimonial?->body ?? 'The level of detail and transparency at Premax is unmatched in Nairobi. It is not just a garage; it truly is a studio.' }}"
+        </blockquote>
+        <div class="flex flex-col items-center">
+            <span class="font-medium tracking-wide text-white">{{ $testimonial?->reviewer_name ?? 'David K.' }}</span>
+            <span class="mt-1 text-sm text-premax-muted">{{ $testimonial?->service?->name ?? 'Porsche 911 Carrera S Owner' }}</span>
+        </div>
+    </div>
+</section>
 
+<section class="border-t border-white/5 bg-premax-dark px-6 py-24 md:py-32">
+    <div class="mx-auto grid max-w-7xl grid-cols-1 gap-16 lg:grid-cols-2 lg:gap-24">
+        <div>
+            <span class="premax-eyebrow mb-4 block">Reservations</span>
+            <h2 class="mb-8 font-display text-3xl font-extrabold text-white md:text-5xl">Book Executive Service.</h2>
+            <p class="mb-10 text-lg text-premax-platinum/70">Secure your appointment at the studio. A service advisor will confirm details and arrange concierge collection where required.</p>
+            <a href="{{ url('/booking') }}" class="premax-button premax-button-primary">Start Booking</a>
+        </div>
+        <div class="relative hidden min-h-[480px] overflow-hidden rounded-2xl lg:block">
+            <img src="https://images.unsplash.com/photo-1603584173870-7f23fdae1b7a?q=80&w=2669&auto=format&fit=crop" alt="Luxury car interior detail" class="absolute inset-0 h-full w-full object-cover">
+            <div class="absolute inset-0 bg-gradient-to-t from-premax-dark/80 to-transparent"></div>
+        </div>
+    </div>
+</section>
+
+<style>
+@keyframes marquee {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+}
+</style>
 @endsection

@@ -1,165 +1,87 @@
 @php
-    $pageTitle       = 'About Us | Premax Autocare & Diagnostic Services';
-    $pageDescription = 'Learn about Premax Autocare — 10+ years of premium auto care and diagnostics in Nairobi. Meet our expert team and discover our story.';
-    $pageKeyWords    = 'about premax autocare, auto garage nairobi, car diagnostics nairobi, premax team, car service nairobi';
+    $pageTitle = 'About Premax | Luxury Automotive Studio Nairobi';
+    $pageDescription = 'Premax is a Nairobi automotive studio built by engineers and trusted by luxury car enthusiasts.';
 @endphp
 
 @extends('layouts.default-menu-page')
+
 @section('content')
-{{-- ═══════════════════════════════════════════
-    PREMAX AUTOCARE — ABOUT PAGE
-═══════════════════════════════════════════ --}}
-
-{{-- ── PAGE HERO ── --}}
-<section class="bg-custom-secondary py-16 text-center">
-    <div class="max-w-2xl mx-auto px-6">
-        <h1 class="text-3xl md:text-4xl font-extrabold text-white tracking-tight">About Premax Autocare</h1>
-        <p class="mt-3 text-gray-400 text-sm leading-relaxed">
-            Setting the standard for premium auto care and diagnostics in Nairobi<br>since 2014.
-        </p>
+<section class="relative flex h-[58vh] min-h-[460px] items-end overflow-hidden">
+    <img src="https://images.unsplash.com/photo-1503376780353-7e6692767b70?q=80&w=2670&auto=format&fit=crop" alt="Premax automotive studio" class="absolute inset-0 h-full w-full object-cover">
+    <div class="absolute inset-0 bg-black/60"></div>
+    <div class="absolute inset-0 bg-gradient-to-t from-premax-dark via-premax-dark/45 to-transparent"></div>
+    <div class="premax-container relative z-10 pb-16 md:pb-24">
+        <span class="premax-eyebrow mb-4 block">About The Studio</span>
+        <h1 class="max-w-4xl font-display text-4xl font-extrabold leading-[1.05] text-white md:text-6xl lg:text-7xl">Built by Engineers. Trusted by Enthusiasts.</h1>
+        <p class="mt-6 max-w-2xl text-lg font-light leading-relaxed text-premax-platinum/80 md:text-xl">Premax was founded on a simple conviction: luxury vehicles in Nairobi deserve the same caliber of care available in Munich, Stuttgart, or Solihull.</p>
     </div>
 </section>
 
-{{-- ── OUR STORY ── --}}
-<section class="bg-white py-20">
-    <div class="max-w-5xl mx-auto px-6">
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-
-            {{-- Image --}}
-            <div class="rounded-2xl overflow-hidden shadow-md">
-                <img src="{{ asset('assets/images/car.avif') }}"
-                     alt="Premium car at Premax Autocare"
-                     class="w-full h-full object-cover aspect-[4/3]">
+<section class="bg-premax-dark px-6 py-24 md:py-32">
+    <div class="mx-auto grid max-w-7xl grid-cols-1 items-center gap-16 lg:grid-cols-2">
+        <div class="relative aspect-[4/5] overflow-hidden rounded-2xl">
+            <img src="https://images.unsplash.com/photo-1487754180451-c456f719a1fc?q=80&w=2670&auto=format&fit=crop" alt="Premax workshop interior" class="h-full w-full object-cover">
+            <div class="absolute inset-0 rounded-2xl border border-white/10"></div>
+        </div>
+        <div>
+            <span class="premax-eyebrow mb-4 block">Our Story</span>
+            <h2 class="mb-8 font-display text-3xl font-extrabold leading-tight text-white md:text-5xl">A studio, not a garage.</h2>
+            <div class="space-y-6 text-lg leading-relaxed text-premax-platinum/75">
+                <p>Premax began with a refusal to accept the status quo of independent automotive service in Nairobi.</p>
+                <p>Today, the facility combines diagnostic discipline, careful detailing, documented service records, and a concierge mindset for clients who notice the details.</p>
+                <p>Our clients arrive by referral, reputation, and the quiet recommendation of people who expect work to be done properly the first time.</p>
             </div>
-
-            {{-- Content --}}
-            <div class="flex flex-col gap-6">
-                <h2 class="text-2xl md:text-3xl font-extrabold text-gray-900 tracking-tight">Our Story</h2>
-
-                <div class="flex flex-col gap-4 text-sm text-gray-600 leading-relaxed">
-                    <p>
-                        Premax Autocare started with a simple mission: to provide a level of car care that we couldn't find anywhere else in Nairobi. What began as a small two-bay wash has grown into a comprehensive auto care facility.
-                    </p>
-                    <p>
-                        We believe that your vehicle is an investment that deserves the best care. That's why we use only premium products, employ trained professionals, and constantly upgrade our equipment to ensure the highest quality results.
-                    </p>
-                </div>
-
-                {{-- Stats --}}
-                <div class="flex items-stretch gap-8 pt-2">
-                    <div class="flex flex-col gap-0.5 pl-4 border-l-2 border-custom-primary">
-                        <span class="text-2xl font-extrabold text-gray-900">10+</span>
-                        <span class="text-xs text-gray-500">Years Experience</span>
-                    </div>
-                    <div class="flex flex-col gap-0.5 pl-4 border-l-2 border-custom-primary">
-                        <span class="text-2xl font-extrabold text-gray-900">15k+</span>
-                        <span class="text-xs text-gray-500">Happy Customers</span>
-                    </div>
-                    <div class="flex flex-col gap-0.5 pl-4 border-l-2 border-custom-primary">
-                        <span class="text-2xl font-extrabold text-gray-900">4.9</span>
-                        <span class="text-xs text-gray-500">Average Rating</span>
-                    </div>
-                </div>
-            </div>
-
         </div>
     </div>
 </section>
 
-{{-- ── WHY CHOOSE US ── --}}
-<section class="bg-gray-50 py-20">
-    <div class="max-w-5xl mx-auto px-6">
-
-        <div class="text-center max-w-xl mx-auto mb-12">
-            <h2 class="text-2xl md:text-3xl font-extrabold text-gray-900 tracking-tight">Why Choose Us</h2>
-            <p class="mt-2 text-gray-500 text-sm">Our core values drive everything we do.</p>
+<section class="bg-[#0A0A0A] px-6 py-24 md:py-32">
+    <div class="mx-auto max-w-7xl">
+        <div class="mb-16 text-center">
+            <span class="premax-eyebrow mb-4 block">Our Principles</span>
+            <h2 class="font-display text-3xl font-extrabold text-white md:text-5xl">What We Stand For.</h2>
         </div>
-
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-            @php
-            $values = [
-                [
-                    'title' => 'Quality First',
-                    'desc'  => 'We never compromise on the quality of our products or our workmanship.',
-                    'icon'  => 'badge',
-                ],
-                [
-                    'title' => 'Expert Team',
-                    'desc'  => 'Our staff are highly trained professionals passionate about cars.',
-                    'icon'  => 'users',
-                ],
-                [
-                    'title' => 'Efficiency',
-                    'desc'  => 'We value your time and strive to provide prompt, reliable service.',
-                    'icon'  => 'clock',
-                ],
-                [
-                    'title' => 'Trust & Honesty',
-                    'desc'  => 'Transparent pricing and honest advice about what your car actually needs.',
-                    'icon'  => 'shield',
-                ],
-            ];
-            @endphp
-
-            @foreach($values as $val)
-            <div class="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 flex flex-col items-center text-center gap-4">
-
-                <div class="w-12 h-12 rounded-xl bg-red-50 flex items-center justify-center shrink-0">
-                    @if($val['icon'] === 'badge')
-                    <svg class="w-6 h-6 text-custom-primary" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/>
-                    </svg>
-                    @elseif($val['icon'] === 'users')
-                    <svg class="w-6 h-6 text-custom-primary" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/>
-                    </svg>
-                    @elseif($val['icon'] === 'clock')
-                    <svg class="w-6 h-6 text-custom-primary" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
-                        <circle cx="12" cy="12" r="10"/>
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6l4 2"/>
-                    </svg>
-                    @else
-                    <svg class="w-6 h-6 text-custom-primary" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
-                    </svg>
-                    @endif
-                </div>
-
-                <div>
-                    <h3 class="text-sm font-bold text-gray-900">{{ $val['title'] }}</h3>
-                    <p class="mt-1.5 text-xs text-gray-500 leading-relaxed">{{ $val['desc'] }}</p>
-                </div>
-            </div>
+        <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
+            @foreach([
+                ['Uncompromising Integrity', 'Transparent estimates, evidence-based recommendations, and no work without your consent.'],
+                ['Engineering First', 'We diagnose causes, not symptoms, with a deep understanding of each marque.'],
+                ['Factory-Level Talent', 'Technicians with experience, discipline, and respect for manufacturer standards.'],
+                ['Client as Partner', 'Long-term stewardship of your vehicle with direct advisor communication.'],
+            ] as [$title, $description])
+                <article class="premax-card p-8 transition-colors hover:border-white/15">
+                    <div class="mb-6 flex h-12 w-12 items-center justify-center rounded-full border border-white/10 bg-premax-dark text-premax-red">
+                        <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.6-4A12 12 0 0 1 12 3 12 12 0 0 1 3.4 6 12 12 0 0 0 12 21a12 12 0 0 0 8.6-15Z"/></svg>
+                    </div>
+                    <h3 class="mb-3 font-display text-lg font-semibold text-white">{{ $title }}</h3>
+                    <p class="text-sm leading-relaxed text-premax-platinum/60">{{ $description }}</p>
+                </article>
             @endforeach
         </div>
-
     </div>
 </section>
 
-{{-- ── MEET THE TEAM ── --}}
-@include('components.team-section')
-
-{{-- ── CTA BANNER ── --}}
-<section class="bg-custom-primary py-14 text-center px-6">
-    <div class="max-w-2xl mx-auto flex flex-col items-center gap-4">
-        <h2 class="text-2xl md:text-3xl font-extrabold text-white">Ready to experience the difference?</h2>
-        <p class="text-red-200 text-sm leading-relaxed">
-            Book your appointment today and let our team take care of your vehicle.
-        </p>
-        <div class="flex items-center gap-3 flex-wrap justify-center mt-2">
-            <a href="{{ url('/booking') }}"
-               class="inline-flex items-center gap-2 bg-white text-custom-primary font-bold text-sm px-7 py-3 rounded-xl no-underline
-                      hover:bg-gray-100 transition-colors duration-200 shadow-lg">
-                Book a Service
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
-                </svg>
-            </a>
-            <a href="{{ url('/contact') }}"
-               class="inline-flex items-center gap-2 border border-white/40 text-white font-bold text-sm px-7 py-3 rounded-xl no-underline
-                      hover:bg-white/10 transition-colors duration-200">
-                Contact Us
-            </a>
+<section class="bg-premax-dark px-6 py-24 md:py-32">
+    <div class="mx-auto max-w-7xl">
+        <div class="mb-16 max-w-2xl">
+            <span class="premax-eyebrow mb-4 block">The People</span>
+            <h2 class="mb-6 font-display text-3xl font-extrabold text-white md:text-5xl">Master Craftsmen.</h2>
+            <p class="text-lg leading-relaxed text-premax-platinum/70">Decades of factory training, distilled into one studio.</p>
+        </div>
+        <div class="grid grid-cols-1 gap-6 md:grid-cols-3">
+            @foreach([
+                ['James Mwangi', 'Founder & Master Technician', 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=2670&auto=format&fit=crop'],
+                ['Aisha Karanja', 'Head of Detailing Studio', 'https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?q=80&w=2576&auto=format&fit=crop'],
+                ['David Otieno', 'Diagnostics Lead', 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=2574&auto=format&fit=crop'],
+            ] as [$name, $role, $image])
+                <article class="group">
+                    <div class="mb-6 aspect-[3/4] overflow-hidden rounded-2xl border border-white/5">
+                        <img src="{{ $image }}" alt="{{ $name }}" class="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105">
+                    </div>
+                    <h3 class="mb-1 font-display text-xl font-semibold text-white">{{ $name }}</h3>
+                    <p class="mb-3 text-xs uppercase tracking-widest text-premax-red">{{ $role }}</p>
+                    <p class="text-sm leading-relaxed text-premax-platinum/60">Factory-trained, detail-driven, and trusted with complex European marques.</p>
+                </article>
+            @endforeach
         </div>
     </div>
 </section>
