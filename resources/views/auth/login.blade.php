@@ -19,7 +19,7 @@
 
     {{-- ── LEFT IMAGE ── --}}
     <div class="hidden lg:block relative">
-        <img src="{{ asset('assets/images/hero/signin.jpg') }}"
+        <img src="{{ asset('assets/images/hero/signin.webp') }}"
              alt=""
              class="absolute inset-0 w-full h-full object-cover">
         <div class="absolute inset-0 bg-gradient-to-t from-[#111111] via-black/30 to-transparent"></div>

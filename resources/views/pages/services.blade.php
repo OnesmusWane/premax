@@ -41,7 +41,7 @@
 {{-- ── PAGE HERO (full-bleed image) ── --}}
 <section class="relative h-[55vh] min-h-[420px] flex items-end overflow-hidden">
     <div class="absolute inset-0 z-0">
-        <img src="{{ asset('assets/images/hero/service.jpg') }}"
+        <img src="{{ asset('assets/images/hero/service.webp') }}"
              alt="Premax Automotive Studio services"
              class="w-full h-full object-cover scale-105">
         <div class="absolute inset-0 bg-black/60"></div>
@@ -141,7 +141,7 @@
                 $isReversed = $globalIdx % 2 === 1;
                 $serviceImg = $service->image
                     ? asset($service->image)
-                    : asset($globalIdx % 2 === 0 ? 'assets/images/hero/home-clinic.jpg' : 'assets/images/hero/home-clinic.jpg');
+                    : asset($globalIdx % 2 === 0 ? 'assets/images/hero/home-clinic.webp' : 'assets/images/hero/home-clinic.webp');
             @endphp
             <article class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
 

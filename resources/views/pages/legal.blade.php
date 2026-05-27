@@ -15,7 +15,7 @@
     {{-- ── Hero ──────────────────────────────────────────────────────────── --}}
     <section class="relative pt-40 pb-28 px-6 bg-[#0a0a0a] overflow-hidden">
         <div class="absolute inset-0">
-            <img src="{{ asset('assets/images/hero/about.jpg') }}" alt=""
+            <img src="{{ asset('assets/images/hero/about.webp') }}" alt=""
                  class="w-full h-full object-cover object-center">
             <div class="absolute inset-0 bg-[#0a0a0a]/80"></div>
             <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(211,30,36,0.07)_0%,transparent_60%)]"></div>

@@ -28,7 +28,7 @@
 
 {{-- ── Open Graph ───────────────────────────────────────────────────────────── --}}
 @php
-    $_ogImage = $pageImage   ?? asset('assets/images/hero/about.jpg');
+    $_ogImage = $pageImage   ?? asset('assets/images/hero/about.webp');
     $_ogTitle = $pageTitle   ?? 'Premax Automotive Studio';
     $_ogDesc  = $pageDescription ?? 'Nairobi\'s premier automotive studio — detailing, diagnostics, tyres, performance and more.';
     $_ogType  = $pageOgType  ?? 'website';

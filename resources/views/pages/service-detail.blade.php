@@ -29,7 +29,7 @@
     $process  = is_string($service->process)  ? json_decode($service->process,  true) : ($service->process  ?? []);
 
     // Hero image — use service image or alternating fallback
-    $heroImage = $service->image ? asset($service->image) : asset('assets/images/hero/home-clinic.jpg');
+    $heroImage = $service->image ? asset($service->image) : asset('assets/images/hero/home-clinic.webp');
     $pageImage = $heroImage;
 @endphp
 

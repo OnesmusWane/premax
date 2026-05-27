@@ -41,7 +41,7 @@
 {{-- ── HERO ── --}}
 <section class="relative pt-40 pb-24 px-6 overflow-hidden">
     <div class="absolute inset-0">
-        <img src="{{ asset('assets/images/hero/work.jpg') }}" alt="Premax Automotive Studio work"
+        <img src="{{ asset('assets/images/hero/work.webp') }}" alt="Premax Automotive Studio work"
              class="w-full h-full object-cover">
         <div class="absolute inset-0 bg-black/65"></div>
         <div class="absolute inset-0 bg-gradient-to-t from-[#111111] via-[#111111]/30 to-transparent"></div>

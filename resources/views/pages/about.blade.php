@@ -38,7 +38,7 @@ $_schema = [
 {{-- ── HERO ── --}}
 <section class="relative pt-40 pb-28 px-6 bg-[#0a0a0a] overflow-hidden">
     <div class="absolute inset-0">
-        <img src="{{ asset('assets/images/hero/about.jpg') }}" alt=""
+        <img src="{{ asset('assets/images/hero/about.webp') }}" alt=""
             class="w-full h-full object-cover object-center">
         <div class="absolute inset-0 bg-[#0a0a0a]/75"></div>
         <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(211,30,36,0.08)_0%,transparent_60%)]"></div>
@@ -80,7 +80,7 @@ $_schema = [
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
 
             <div class="relative aspect-[4/3] rounded-2xl overflow-hidden">
-                <img src="{{ asset('assets/images/about-support.jpg') }}"
+                <img src="{{ asset('assets/images/about-support.webp') }}"
                      alt="Premax Automotive Studio"
                      class="w-full h-full object-cover">
                 <div class="absolute inset-0 border border-white/8 rounded-2xl pointer-events-none"></div>
@@ -201,7 +201,7 @@ $_schema = [
             </div>
 
             <div class="relative aspect-[4/3] rounded-2xl overflow-hidden order-1 lg:order-2">
-                <img src="{{ asset('assets/images/about-engineering.jpg') }}"
+                <img src="{{ asset('assets/images/about-engineering.webp') }}"
                      alt="Premax Studio Facility"
                      class="w-full h-full object-cover">
                 <div class="absolute inset-0 border border-white/8 rounded-2xl pointer-events-none"></div>

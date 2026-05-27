@@ -48,7 +48,7 @@
 {{-- ── HERO ── --}}
 <section class="relative h-[55vh] min-h-[380px] flex items-end overflow-hidden">
     <div class="absolute inset-0 z-0">
-        <img src="{{ asset('assets/images/hero/shop.jpg') }}"
+        <img src="{{ asset('assets/images/hero/shop.webp') }}"
              alt="Premax Boutique"
              class="w-full h-full object-cover scale-105">
         <div class="absolute inset-0 bg-black/65"></div>
