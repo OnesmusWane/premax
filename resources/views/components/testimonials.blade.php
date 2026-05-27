@@ -1,23 +1,25 @@
-{{-- ══════════════════════════════════════
-     TESTIMONIALS
+{{-- ═══════════════════════════════════════════
+     TESTIMONIALS — Dark section
      Component: <x-testimonials />
-     Fetched from reviews table (approved + show_on_website).
-     ≤3 reviews: standard 3-col grid.
-     >3 reviews: horizontally scrollable carousel with drag support.
-══════════════════════════════════════ --}}
+     Data: approved reviews, featured first (cached 2h)
+     ≤3 reviews → grid  |  >3 → drag-scroll carousel
+═══════════════════════════════════════════ --}}
 
 @if($reviews->isNotEmpty())
-<section class="bg-gray-50 py-20">
-    <div class="max-w-7xl mx-auto px-6">
+<section class="py-24 md:py-36 px-6 bg-[#0a0a0a]">
+    <div class="max-w-7xl mx-auto">
 
         {{-- Header --}}
-        <div class="text-center max-w-xl mx-auto mb-12">
-            <h2 class="text-3xl md:text-4xl font-extrabold text-gray-900 tracking-tight">What Our Customers Say</h2>
-            <p class="mt-3 text-gray-500 text-sm">Don't just take our word for it. Here's what our clients have to say.</p>
+        <div class="text-center max-w-xl mx-auto mb-16">
+            <span class="text-custom-primary text-xs font-bold tracking-[0.25em] uppercase mb-4 block">
+                Client Stories
+            </span>
+            <h2 class="text-3xl md:text-4xl font-bold text-white tracking-tight">
+                What Our Clients Say.
+            </h2>
 
-            {{-- Review count badge --}}
             @if($reviews->count() > 0)
-            <div class="mt-4 inline-flex items-center gap-1.5 bg-yellow-50 border border-yellow-200 rounded-full px-4 py-1.5">
+            <div class="mt-6 inline-flex items-center gap-2 bg-white/5 border border-white/10 rounded-full px-4 py-1.5">
                 <div class="flex items-center gap-0.5">
                     @for($i = 0; $i < 5; $i++)
                     <svg class="w-3.5 h-3.5 text-yellow-400" fill="currentColor" viewBox="0 0 24 24">
@@ -25,15 +27,15 @@
                     </svg>
                     @endfor
                 </div>
-                <span class="text-xs font-semibold text-yellow-700">
-                    {{ number_format($reviews->avg('rating'), 1) }} · {{ $reviews->count() }} {{ Str::plural('review', $reviews->count()) }}
+                <span class="text-xs font-semibold text-white/50">
+                    {{ number_format($reviews->avg('rating'), 1) }} &middot; {{ $reviews->count() }} {{ Str::plural('review', $reviews->count()) }}
                 </span>
             </div>
             @endif
         </div>
 
         @if($reviews->count() <= 3)
-        {{-- ── GRID (3 or fewer) ── --}}
+        {{-- Grid (3 or fewer) --}}
         <div class="grid grid-cols-1 md:grid-cols-{{ $reviews->count() }} gap-6">
             @foreach($reviews as $review)
                 @include('components.review-card', ['review' => $review])
@@ -41,14 +43,11 @@
         </div>
 
         @else
-        {{-- ── SCROLLABLE CAROUSEL (more than 3) ── --}}
+        {{-- Drag-scroll carousel --}}
         <div class="relative">
+            <div class="pointer-events-none absolute left-0 top-0 bottom-0 w-16 bg-gradient-to-r from-[#0a0a0a] to-transparent z-10 hidden md:block"></div>
+            <div class="pointer-events-none absolute right-0 top-0 bottom-0 w-16 bg-gradient-to-l from-[#0a0a0a] to-transparent z-10 hidden md:block"></div>
 
-            {{-- Fade edges --}}
-            <div class="pointer-events-none absolute left-0 top-0 bottom-0 w-12 bg-gradient-to-r from-gray-50 to-transparent z-10 hidden md:block"></div>
-            <div class="pointer-events-none absolute right-0 top-0 bottom-0 w-12 bg-gradient-to-l from-gray-50 to-transparent z-10 hidden md:block"></div>
-
-            {{-- Scroll track --}}
             <div id="testimonials-track"
                  class="flex gap-5 overflow-x-auto pb-4 scroll-smooth snap-x snap-mandatory
                         [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden
@@ -63,24 +62,22 @@
             </div>
 
             {{-- Dot indicators --}}
-            <div class="flex justify-center gap-2 mt-6" id="testimonials-dots">
+            <div class="flex justify-center gap-2 mt-8" id="testimonials-dots">
                 @foreach($reviews->chunk(1) as $i => $chunk)
                 <button type="button"
-                        class="testimonial-dot w-2 h-2 rounded-full transition-all duration-300
-                               {{ $i === 0 ? 'bg-custom-primary w-5' : 'bg-gray-300' }}"
+                        class="testimonial-dot rounded-full transition-all duration-300
+                               {{ $i === 0 ? 'bg-custom-primary w-5 h-2' : 'bg-white/20 w-2 h-2' }}"
                         data-index="{{ $i }}"
                         aria-label="Go to review {{ $i + 1 }}">
                 </button>
                 @endforeach
             </div>
-
         </div>
         @endif
 
     </div>
 </section>
 
-{{-- Drag-scroll + dot sync JS --}}
 @if($reviews->count() > 3)
 @push('scripts-stack')
 <script>
@@ -89,53 +86,37 @@
     const dots  = document.querySelectorAll('.testimonial-dot');
     if (!track) return;
 
-    // ── Drag to scroll ──────────────────────────────────
     let isDown = false, startX = 0, scrollLeft = 0;
-
-    track.addEventListener('mousedown', e => {
-        isDown     = true;
-        startX     = e.pageX - track.offsetLeft;
-        scrollLeft = track.scrollLeft;
-    });
+    track.addEventListener('mousedown', e => { isDown = true; startX = e.pageX - track.offsetLeft; scrollLeft = track.scrollLeft; });
     track.addEventListener('mouseleave', () => isDown = false);
     track.addEventListener('mouseup',    () => isDown = false);
     track.addEventListener('mousemove',  e => {
         if (!isDown) return;
         e.preventDefault();
-        const x    = e.pageX - track.offsetLeft;
-        const walk = (x - startX) * 1.5;
-        track.scrollLeft = scrollLeft - walk;
+        track.scrollLeft = scrollLeft - (e.pageX - track.offsetLeft - startX) * 1.5;
     });
 
-    // Touch scroll already works natively — no extra code needed.
-
-    // ── Dot sync ────────────────────────────────────────
-    function updateDots(activeIndex) {
-        dots.forEach((dot, i) => {
-            dot.classList.toggle('bg-custom-primary', i === activeIndex);
-            dot.classList.toggle('w-5',               i === activeIndex);
-            dot.classList.toggle('bg-gray-300',       i !== activeIndex);
-            dot.classList.toggle('w-2',               i !== activeIndex);
+    function updateDots(idx) {
+        dots.forEach((d, i) => {
+            d.classList.toggle('bg-custom-primary', i === idx);
+            d.classList.toggle('w-5',               i === idx);
+            d.classList.toggle('bg-white/20',       i !== idx);
+            d.classList.toggle('w-2',               i !== idx);
         });
     }
 
-    // Click dot → scroll to card
     dots.forEach((dot, i) => {
         dot.addEventListener('click', () => {
-            const cards    = track.querySelectorAll(':scope > div');
-            const card     = cards[i];
-            if (!card) return;
-            track.scrollTo({ left: card.offsetLeft - track.offsetLeft, behavior: 'smooth' });
+            const card = track.querySelectorAll(':scope > div')[i];
+            if (card) track.scrollTo({ left: card.offsetLeft - track.offsetLeft, behavior: 'smooth' });
         });
     });
 
-    // Scroll → update active dot
     const observer = new IntersectionObserver(entries => {
         entries.forEach(entry => {
             if (!entry.isIntersecting) return;
-            const cards = Array.from(track.querySelectorAll(':scope > div'));
-            const index = cards.indexOf(entry.target);
-            if (index !== -1) updateDots(index);
+            const idx = Array.from(track.querySelectorAll(':scope > div')).indexOf(entry.target);
+            if (idx !== -1) updateDots(idx);
         });
     }, { root: track, threshold: 0.6 });
 

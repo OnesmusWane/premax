@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\AdminAlertMail;
 use App\Models\Booking;
 use App\Models\ContactInformation;
 use App\Models\Service;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Mail;
 use Carbon\Carbon;
 use App\Models\Customer;
 use App\Models\Vehicle;
@@ -28,10 +30,17 @@ class BookingController extends Controller
                 ->groupBy(fn($s) => $s->serviceCategory->name ?? 'Other');
         });
 
-        // Pre-selected service from ?service= query param (from homepage cards)
+        // Pre-selected service from ?service= query param (from service cards)
         $selectedServiceId = $request->query('service');
 
-        return view('pages.booking', compact('services', 'selectedServiceId'));
+        // Pass auth user data so step 4 can be pre-filled in JS
+        $userData = null;
+        if (auth()->check()) {
+            $u = auth()->user();
+            $userData = ['name' => $u->name, 'phone' => $u->phone ?? '', 'email' => $u->email];
+        }
+
+        return view('pages.booking', compact('services', 'selectedServiceId', 'userData'));
     }
 
     /**
@@ -101,6 +110,7 @@ class BookingController extends Controller
 
     // ── 6. Create Booking ─────────────────────────────────────────────────
     $booking = Booking::create([
+        'user_id'           => auth()->id() ?? null,
         'reference'         => Booking::generateReference(),
         'service_id'        => $service?->id,
         'vehicle_id'        => $vehicle->id,
@@ -110,6 +120,24 @@ class BookingController extends Controller
         'scheduled_at'      => Carbon::parse($validated['date'] . ' ' . $validated['time']),
         'customer_notes'    => $validated['notes'] ?? null,
     ]);
+
+    $adminEmail = ContactInformation::primaryEmail();
+    if ($adminEmail) {
+        Mail::to($adminEmail)->send(new AdminAlertMail(
+            alertSubject: 'New booking — ' . $validated['service'] . ' · ' . strtoupper($reg),
+            type: 'Service Booking',
+            rows: [
+                ['label' => 'Reference',   'value' => $booking->reference],
+                ['label' => 'Service',     'value' => $validated['service']],
+                ['label' => 'Vehicle',     'value' => strtoupper($reg) . (($validated['make'] ?? null) ? ' — ' . $validated['make'] : '')],
+                ['label' => 'Scheduled',   'value' => Carbon::parse($validated['date'] . ' ' . $validated['time'])->format('d M Y \a\t H:i')],
+                ['label' => 'Customer',    'value' => $validated['name']],
+                ['label' => 'Phone',       'value' => $validated['phone']],
+                ['label' => 'Email',       'value' => $validated['email'] ?? '—'],
+            ],
+            note: $validated['notes'] ?? null,
+        ));
+    }
 
     return redirect()
         ->route('booking.success', ['ref' => $booking->reference])

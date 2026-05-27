@@ -10,18 +10,15 @@ class LegalPage extends Model
     use SoftDeletes;
 
     protected $fillable = [
-        'type',
-        'title',
-        'slug',
-        'content',
-        'version',
-        'effective_date',
-        'is_active',
+        'type', 'title', 'slug', 'description',
+        'content', 'sections',
+        'version', 'effective_date', 'is_active',
     ];
 
     protected $casts = [
         'is_active'      => 'boolean',
         'effective_date' => 'datetime',
+        'sections'       => 'array',
     ];
 
     // Type constants

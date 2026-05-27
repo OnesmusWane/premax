@@ -1,80 +1,81 @@
-{{-- ══════════════════════════════════════
-     OUR PREMIUM SERVICES
+{{-- ═══════════════════════════════════════════
+     OUR SERVICES — Asymmetric masonry grid
      Component: <x-featured-services />
-     Rotates 6 random services daily — cached until midnight.
-══════════════════════════════════════ --}}
-<section class="bg-gray-50 py-20">
-    <div class="max-w-7xl mx-auto px-6">
+     Data: 6 random active services, rotated daily (cached)
+     Layout: indices 0 & 4 span 2 cols (large), rest are 1 col
+═══════════════════════════════════════════ --}}
+<section id="services" class="py-24 md:py-32 px-6 bg-[#111111]">
+    <div class="max-w-7xl mx-auto">
 
-        {{-- Header --}}
-        <div class="text-center max-w-xl mx-auto mb-12">
-            <h2 class="text-3xl md:text-4xl font-extrabold text-gray-900 tracking-tight">Our Premium Services</h2>
-            <p class="mt-3 text-gray-500 text-sm leading-relaxed">
-                We offer a comprehensive range of auto care services to keep your vehicle looking and running its best.
+        <div class="mb-16 md:mb-24 max-w-2xl">
+            <span class="text-custom-primary text-xs font-bold tracking-[0.25em] uppercase mb-4 block">
+                Our Expertise
+            </span>
+            <h2 class="text-4xl md:text-5xl font-bold text-white mb-6 leading-tight">
+                Comprehensive Care.
+            </h2>
+            <p class="text-white/55 text-lg leading-relaxed">
+                From routine maintenance to complex rebuilds, our studio is equipped to handle
+                every aspect of luxury vehicle care with surgical precision.
             </p>
         </div>
 
-        {{-- Cards grid --}}
         @if($services->isNotEmpty())
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 auto-rows-[minmax(280px,auto)]">
             @foreach($services as $service)
-            <div class="bg-white rounded-2xl p-6 flex flex-col gap-4 border transition-all duration-300 group
-                        {{ $service->is_popular
-                           ? 'border-custom-primary shadow-[0_8px_30px_rgba(211,30,36,0.15)] scale-[1.02]'
-                           : 'border-gray-100 shadow-sm hover:shadow-md hover:-translate-y-1 hover:border-custom-primary' }}">
+            @php
+                $isLarge = $loop->index === 0 || $loop->index === 4;
+            @endphp
+            <div class="group relative bg-[#1a1a1a] border border-white/5 rounded-2xl p-8 flex flex-col justify-between
+                        hover:border-white/15 transition-colors duration-300
+                        {{ $isLarge ? 'md:col-span-2' : 'col-span-1' }}">
 
-                {{-- Icon --}}
-                <div class="w-12 h-12 rounded-xl flex items-center justify-center bg-red-50 text-custom-primary
-                            group-hover:bg-custom-primary group-hover:text-white transition-colors duration-300">
-                    @include('components.service-icon', ['icon' => $service->icon])
-                </div>
-
-                {{-- Content --}}
                 <div>
-                    <p class="text-[10px] text-gray-400 uppercase tracking-widest mb-1">
+                    {{-- Icon --}}
+                    <div class="w-12 h-12 rounded-full bg-[#111111] border border-white/10 flex items-center justify-center mb-6
+                                text-custom-primary group-hover:-translate-y-1 transition-transform duration-300">
+                        @include('components.service-icon', ['icon' => $service->icon])
+                    </div>
+
+                    {{-- Category label --}}
+                    <p class="text-[10px] text-white/25 uppercase tracking-widest mb-2">
                         {{ $service->serviceCategory->name ?? '' }}
                     </p>
-                    <h3 class="text-base font-bold text-gray-900">{{ $service->name }}</h3>
-                    <p class="mt-1.5 text-sm text-gray-500 leading-relaxed">{{ $service->description }}</p>
+
+                    <h3 class="text-xl font-semibold text-white mb-3">{{ $service->name }}</h3>
+                    <p class="text-white/50 leading-relaxed text-sm">{{ $service->description }}</p>
                 </div>
 
-                {{-- Price + Book --}}
-                <div class="mt-auto flex items-end justify-between pt-4 border-t border-gray-100">
-                    <div>
-                        <div class="text-[10px] text-gray-400 uppercase tracking-widest mb-0.5">
-                            {{ $service->price_is_estimate ? 'From' : 'Price' }}
-                        </div>
-                        <div class="text-base font-extrabold text-gray-900">
-                            KES {{ number_format($service->price_from) }}
-                            @if($service->price_to)
-                                <span class="text-sm font-normal text-gray-400">– {{ number_format($service->price_to) }}</span>
-                            @endif
-                        </div>
-                    </div>
-                    <a href="{{ url('/booking?service=' . $service->id) }}"
-                       class="inline-flex items-center gap-1 text-sm font-bold text-custom-primary hover:gap-2 no-underline transition-all duration-200">
-                        Book Now
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
-                        </svg>
+                <div class="mt-8">
+                    @if($service->slug)
+                    <a href="{{ route('services.show', $service->slug) }}"
+                       class="inline-flex items-center text-sm font-medium text-white/50
+                              group-hover:text-white transition-colors duration-200 no-underline">
+                        Learn more
+                        <span class="ml-2 group-hover:translate-x-1 transition-transform inline-block">→</span>
                     </a>
+                    @else
+                    <a href="{{ url('/booking?service=' . $service->id) }}"
+                       class="inline-flex items-center text-sm font-medium text-white/50
+                              group-hover:text-white transition-colors duration-200 no-underline">
+                        Book Now
+                        <span class="ml-2 group-hover:translate-x-1 transition-transform inline-block">→</span>
+                    </a>
+                    @endif
                 </div>
 
             </div>
             @endforeach
         </div>
         @else
-        <p class="text-center text-gray-400 text-sm">No services available at the moment.</p>
+        <p class="text-center text-white/25 text-sm py-16">No services available at the moment.</p>
         @endif
 
-        <div class="text-center mt-8 flex justify-center">
-            <a href="{{ url('/services') }}" class="text-semibold text-custom-primary flex gap-2 items-center">
-                View All Services
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                     fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                     stroke-linejoin="round" class="w-5 h-5" aria-hidden="true">
-                    <path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>
-                </svg>
+        <div class="mt-16 text-center">
+            <a href="{{ url('/services') }}"
+               class="inline-flex items-center gap-2 px-8 py-4 bg-transparent border border-white/15
+                      text-white font-medium rounded-md hover:bg-white/5 transition-colors no-underline">
+                View all services →
             </a>
         </div>
 

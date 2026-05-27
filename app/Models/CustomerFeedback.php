@@ -10,7 +10,7 @@ class CustomerFeedback extends Model
     protected $table = 'customer_feedbacks';
     protected $fillable = [
         'feedback_token_id', 'name', 'phone', 'vehicle',
-        'service', 'rating', 'liked', 'suggestions', 'recommend',
+        'service', 'title', 'rating', 'liked', 'suggestions', 'recommend',
     ];
  
     public function token(): BelongsTo

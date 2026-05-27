@@ -1,20 +1,51 @@
 @extends('layouts.default-menu-page')
 @section('content')
-<div class="bg-gray-100 min-h-screen flex items-center justify-center px-4">
-    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-10 max-w-md w-full text-center">
-        <div class="w-14 h-14 rounded-full bg-amber-50 flex items-center justify-center mx-auto mb-4">
-            <svg class="w-7 h-7 text-amber-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+
+<div class="bg-[#111111] min-h-screen pt-36 pb-24 px-6 flex items-center justify-center">
+    <div class="max-w-md mx-auto text-center" id="state-wrap" style="opacity:0;transform:translateY(20px)">
+
+        <div class="w-20 h-20 rounded-full bg-white/5 border border-white/10
+                    flex items-center justify-center mx-auto mb-8">
+            <svg class="w-8 h-8 text-white/35" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                      d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
             </svg>
         </div>
-        <h2 class="text-xl font-extrabold text-gray-900 mb-2">Already Submitted</h2>
-        <p class="text-sm text-gray-500 leading-relaxed">
-            This feedback link has already been used. Each link can only be used once.<br>
-            Thank you for your response!
+
+        <span class="text-white/30 text-xs font-bold tracking-[0.3em] uppercase mb-4 block">
+            Already Submitted
+        </span>
+        <h1 class="text-4xl md:text-5xl font-bold text-white mb-4 leading-tight">
+            Review already received.
+        </h1>
+        <p class="text-white/45 text-lg max-w-sm mx-auto mb-10">
+            This review link has already been used. Each link can only be submitted once.
+            Thank you for taking the time — your feedback means a lot to us.
         </p>
-        <a href="{{ url('/') }}" class="inline-block mt-6 text-sm font-bold text-custom-primary hover:underline">
-            Back to Home
+
+        <a href="{{ url('/') }}"
+           class="inline-flex items-center gap-2 px-8 py-3.5 bg-custom-primary text-white font-semibold
+                  rounded-md hover:bg-red-700 transition-colors shadow-[0_4px_14px_rgba(211,30,36,0.28)]">
+            Back to home
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+            </svg>
         </a>
+
     </div>
 </div>
+
+@push('scripts-stack')
+<script>
+(function () {
+    var el = document.getElementById('state-wrap');
+    setTimeout(function () {
+        el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+        el.style.opacity    = '1';
+        el.style.transform  = 'translateY(0)';
+    }, 60);
+})();
+</script>
+@endpush
+
 @endsection

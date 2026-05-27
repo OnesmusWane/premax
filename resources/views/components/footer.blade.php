@@ -246,7 +246,7 @@
             </a>
             @endforeach
 
-            <a href="{{ url('/admin') }}"
+            <a href="https://admin.premaxautoservice.co.ke" target="_blank"
                class="text-gray-600 hover:text-custom-primary no-underline transition-colors duration-200">
                 Admin Login
             </a>

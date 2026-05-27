@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(php artisan *)",
+      "Bash(python3 -c \"import sys,json; d=json.load\\(sys.stdin\\); print\\('\\\\n'.join\\([k for k in {**d.get\\('require',{}\\),**d.get\\('require-dev',{}\\)} if 'breeze' in k or 'sanctum' in k or 'passport' in k]\\)\\)\")"
+    ]
+  }
+}

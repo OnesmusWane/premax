@@ -11,6 +11,7 @@ class Booking extends Model
     use SoftDeletes;
 
     protected $fillable = [
+        'user_id',
         'reference',
         'service_id',
         'vehicle_id',
@@ -28,6 +29,11 @@ class Booking extends Model
     ];
 
     // ── Relationships ─────────────────────────────────────────────────────
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(\App\Models\User::class);
+    }
 
     public function service(): BelongsTo
     {

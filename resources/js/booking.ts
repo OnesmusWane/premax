@@ -2,6 +2,7 @@
 //  Premax Autocare — Multi-step Booking JS
 //  File: resources/js/booking.ts
 // ═══════════════════════════════════════════════════════
+export {};
 
 interface BookingData {
     serviceId:  string;
@@ -19,10 +20,15 @@ interface BookingData {
 
 declare global {
     interface Window {
-        PREMAX: { selectedServiceId: string | null };
         nextStep: (from: number) => void;
         prevStep: (from: number) => void;
     }
+}
+
+interface UserPrefill {
+    name:  string;
+    phone: string;
+    email: string;
 }
 
 const state: BookingData = {
@@ -88,6 +94,9 @@ function validateStep(step: number): boolean {
 
 // ── Stepper UI ─────────────────────────────────────────
 
+const STEP_ACTIVE   = ['bg-custom-primary', 'border-custom-primary', 'text-white'];
+const STEP_INACTIVE = ['bg-[#1a1a1a]', 'border-white/15', 'text-white/30'];
+
 function updateStepper(to: number): void {
     document.querySelectorAll<HTMLElement>('[data-step]').forEach(wrapper => {
         const step    = parseInt(wrapper.dataset.step ?? '0');
@@ -97,18 +106,18 @@ function updateStepper(to: number): void {
         if (!dot || !numEl || !checkEl) return;
 
         if (step < to) {
-            dot.classList.remove('bg-white', 'border-gray-300', 'text-gray-400');
-            dot.classList.add('bg-custom-primary', 'border-custom-primary', 'text-white');
+            dot.classList.remove(...STEP_INACTIVE);
+            dot.classList.add(...STEP_ACTIVE);
             numEl.classList.add('hidden');
             checkEl.classList.remove('hidden');
         } else if (step === to) {
-            dot.classList.remove('bg-white', 'border-gray-300', 'text-gray-400');
-            dot.classList.add('bg-custom-primary', 'border-custom-primary', 'text-white');
+            dot.classList.remove(...STEP_INACTIVE);
+            dot.classList.add(...STEP_ACTIVE);
             numEl.classList.remove('hidden');
             checkEl.classList.add('hidden');
         } else {
-            dot.classList.remove('bg-custom-primary', 'border-custom-primary', 'text-white');
-            dot.classList.add('bg-white', 'border-gray-300', 'text-gray-400');
+            dot.classList.remove(...STEP_ACTIVE);
+            dot.classList.add(...STEP_INACTIVE);
             numEl.classList.remove('hidden');
             checkEl.classList.add('hidden');
         }
@@ -117,7 +126,7 @@ function updateStepper(to: number): void {
     document.querySelectorAll<HTMLElement>('[data-line]').forEach(line => {
         const n = parseInt(line.dataset.line ?? '0');
         line.classList.toggle('bg-custom-primary', n < to);
-        line.classList.toggle('bg-gray-300',       n >= to);
+        line.classList.toggle('bg-white/10',       n >= to);
     });
 }
 
@@ -191,19 +200,20 @@ window.prevStep = function(from: number): void {
 document.addEventListener('DOMContentLoaded', () => {
 
     // ── Category tab switching ──────────────────────────
+    const TAB_ACTIVE   = ['bg-custom-primary', 'text-white', 'border-custom-primary'];
+    const TAB_INACTIVE = ['bg-transparent', 'text-white/40', 'border-white/10'];
+
     document.querySelectorAll<HTMLButtonElement>('.category-tab').forEach(tab => {
         tab.addEventListener('click', () => {
             const target = tab.dataset.category ?? '';
 
-            // Update tab styles
             document.querySelectorAll<HTMLButtonElement>('.category-tab').forEach(t => {
-                t.classList.remove('bg-custom-primary', 'text-white', 'border-custom-primary');
-                t.classList.add('bg-white', 'text-gray-600', 'border-gray-300');
+                t.classList.remove(...TAB_ACTIVE);
+                t.classList.add(...TAB_INACTIVE);
             });
-            tab.classList.add('bg-custom-primary', 'text-white', 'border-custom-primary');
-            tab.classList.remove('bg-white', 'text-gray-600', 'border-gray-300');
+            tab.classList.remove(...TAB_INACTIVE);
+            tab.classList.add(...TAB_ACTIVE);
 
-            // Show/hide groups
             document.querySelectorAll<HTMLElement>('.category-group').forEach(group => {
                 group.style.display = group.dataset.group === target ? 'grid' : 'none';
             });
@@ -224,29 +234,40 @@ document.addEventListener('DOMContentLoaded', () => {
         card.addEventListener('click', () => selectServiceCard(card));
     });
 
-    // Pre-select if ?service= was passed from homepage cards
-    const preselectedId = window.PREMAX?.selectedServiceId;
+    // ── Read server-rendered data ───────────────────────
+    const premaxEl      = document.getElementById('premax-data');
+    const preselectedId = premaxEl?.dataset.selectedService ?? '';
+    const userData      = premaxEl?.dataset.user ? JSON.parse(premaxEl.dataset.user) as UserPrefill | null : null;
+
+    // Pre-select service when ?service= passed from service cards
     if (preselectedId) {
         const target = document.querySelector<HTMLButtonElement>(
             `.service-card[data-service-id="${preselectedId}"]`
         );
         if (target) {
-            // Switch to its category tab first
             const parentGroup = target.closest<HTMLElement>('.category-group');
             if (parentGroup) {
                 const groupKey = parentGroup.dataset.group ?? '';
-                const tab = document.querySelector<HTMLButtonElement>(
+                document.querySelector<HTMLButtonElement>(
                     `.category-tab[data-category="${groupKey}"]`
-                );
-                tab?.click();
+                )?.click();
             }
             selectServiceCard(target);
         }
+    } else {
+        const bladePreselect = document.querySelector<HTMLButtonElement>('.service-card[data-preselect]');
+        if (bladePreselect) selectServiceCard(bladePreselect);
     }
 
-    // Also handle data-preselect attribute rendered by Blade
-    const bladePreselect = document.querySelector<HTMLButtonElement>('.service-card[data-preselect]');
-    if (bladePreselect && !preselectedId) selectServiceCard(bladePreselect);
+    // ── Pre-fill step 4 with logged-in user details ─────
+    if (userData) {
+        const nameInput  = $<HTMLInputElement>('full-name');
+        const phoneInput = $<HTMLInputElement>('phone');
+        const emailInput = $<HTMLInputElement>('email');
+        if (nameInput  && userData.name)  nameInput.value  = userData.name;
+        if (phoneInput && userData.phone) phoneInput.value = userData.phone;
+        if (emailInput && userData.email) emailInput.value = userData.email;
+    }
 
     // ── Time slot selection ─────────────────────────────
     document.querySelectorAll<HTMLButtonElement>('.time-slot').forEach(slot => {

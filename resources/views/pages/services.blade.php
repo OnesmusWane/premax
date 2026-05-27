@@ -1,214 +1,306 @@
 @php
-    $pageTitle       = 'Our Services | Premax Autocare — Nairobi';
-    $pageDescription = 'Comprehensive auto care services in Nairobi — tyre fitting, wheel alignment, oil change, engine wash, panel beating, diagnostics and more. Book online today.';
-    $pageKeyWords    = 'tyre services nairobi, wheel alignment nairobi, oil change nairobi, engine wash, panel beating nairobi, car diagnostics, auto garage kiambu road';
+    $pageTitle       = 'Our Services | Premax Automotive Studio — Nairobi';
+    $pageDescription = 'A complete spectrum of services for luxury vehicles — diagnostics, detailing, tyres, alignment, oil change, panel beating and more. Book online today.';
+    $pageKeyWords    = 'tyre services nairobi, wheel alignment nairobi, oil change nairobi, panel beating nairobi, car diagnostics, auto garage kiambu road';
+
+    $activeCategoryObj = $categories->firstWhere('slug', $categorySlug);
+    $activeCategoryName = $activeCategoryObj?->name ?? 'All Services';
+    $activeCategoryDesc = $activeCategoryObj?->description ?? 'The complete catalogue.';
+    $showingFrom = ($services->currentPage() - 1) * $services->perPage() + 1;
+    $showingTo   = $showingFrom + $services->count() - 1;
+    $totalShown  = $categorySlug === 'all' ? $totalAll : ($activeCategoryObj?->services->count() ?? 0);
 @endphp
 
 @extends('layouts.default-menu-page')
+
+@section('head-tags')
+<script type="application/ld+json">
+{
+  "@@context": "https://schema.org",
+  "@type": "ItemList",
+  "name": "Premax Automotive Studio Services",
+  "url": "{{ route('services.index') }}",
+  "itemListElement": [
+    @foreach($services as $i => $svc)
+    {
+      "@type": "ListItem",
+      "position": {{ $i + 1 }},
+      "name": "{{ addslashes($svc->name) }}",
+      "url": "{{ route('services.show', $svc->slug) }}"
+    }{{ !$loop->last ? ',' : '' }}
+    @endforeach
+  ]
+}
+</script>
+@endsection
+
 @section('content')
 
-{{-- ── PAGE HERO ── --}}
-<section class="bg-custom-secondary py-16 text-center">
-    <div class="max-w-2xl mx-auto px-6">
-        <h1 class="text-3xl md:text-4xl font-extrabold text-white tracking-tight">Our Services</h1>
-        <p class="mt-3 text-gray-400 text-sm leading-relaxed">
-            Comprehensive auto care solutions tailored to your vehicle's needs.<br>
-            Quality service guaranteed.
+<div class="bg-[#111111]">
+
+{{-- ── PAGE HERO (full-bleed image) ── --}}
+<section class="relative h-[55vh] min-h-[420px] flex items-end overflow-hidden">
+    <div class="absolute inset-0 z-0">
+        <img src="{{ asset('assets/images/hero/service.jpg') }}"
+             alt="Premax Automotive Studio services"
+             class="w-full h-full object-cover scale-105">
+        <div class="absolute inset-0 bg-black/60"></div>
+        <div class="absolute inset-0 bg-gradient-to-t from-[#111111] via-[#111111]/40 to-transparent"></div>
+    </div>
+
+    <div class="relative z-10 w-full max-w-7xl mx-auto px-6 md:px-12 pb-16 md:pb-24">
+
+        {{-- Breadcrumb --}}
+        <nav class="flex items-center gap-2 text-[10px] font-bold tracking-[0.2em] uppercase text-white/40 mb-6">
+            <a href="{{ url('/') }}" class="hover:text-white/70 transition-colors no-underline">Home</a>
+            <svg class="w-3 h-3 text-white/25" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>
+            </svg>
+            <span class="text-white/70">Services</span>
+        </nav>
+
+        <span class="block text-custom-primary text-xs font-bold tracking-[0.3em] uppercase mb-4">
+            Our Expertise
+        </span>
+        <h1 class="text-4xl md:text-6xl lg:text-7xl font-bold text-white max-w-4xl leading-[1.05] tracking-tight">
+            Services Crafted for the<br>Marques You Drive.
+        </h1>
+        <p class="text-white/70 text-lg md:text-xl max-w-2xl mt-6 leading-relaxed font-light">
+            A complete spectrum of services for luxury vehicles, executed with
+            manufacturer-level precision and presented with executive-level care.
         </p>
     </div>
 </section>
 
-{{-- ── CATEGORY FILTER TABS ── --}}
-<div class="bg-white border-b border-gray-200 sticky top-0 z-30 shadow-sm" id="category-nav">
-    <div class="max-w-5xl mx-auto px-6 overflow-x-auto">
-        <div class="flex items-center gap-1 py-3 min-w-max">
-            {{-- "All" tab --}}
-            <button type="button"
-                    class="category-tab active px-4 py-2 rounded-full text-xs font-semibold border transition-all duration-150
-                           bg-custom-primary text-white border-custom-primary"
-                    data-target="all">
-                All Services
-            </button>
-            @foreach($categories as $category)
-            <button type="button"
-                    class="category-tab px-4 py-2 rounded-full text-xs font-semibold border transition-all duration-150
-                           bg-white text-gray-600 border-gray-300 hover:border-custom-primary hover:text-custom-primary"
-                    data-target="cat-{{ $category->id }}">
-                {{ $category->name }}
-            </button>
+
+{{-- ── STICKY CATEGORY FILTER BAR ── --}}
+<div id="services-list-top"
+     class="sticky top-[72px] z-30 bg-[#111111]/90 backdrop-blur-lg border-b border-white/5">
+    <div class="max-w-7xl mx-auto px-6">
+        <div class="flex items-center gap-3 py-5 overflow-x-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden -mx-1 px-1">
+
+            {{-- All --}}
+            <a href="{{ route('services.index') }}"
+               class="group whitespace-nowrap shrink-0 px-5 py-2.5 rounded-full text-xs uppercase tracking-widest
+                      font-medium border transition-all no-underline
+                      {{ $categorySlug === 'all' ? 'bg-custom-primary border-custom-primary text-white' : 'bg-transparent border-white/15 text-white/60 hover:border-white/40 hover:text-white' }}">
+                <span>All Services</span>
+                <span class="ml-2 text-[10px] {{ $categorySlug === 'all' ? 'text-white/80' : 'text-white/30 group-hover:text-white/60' }}">{{ $totalAll }}</span>
+            </a>
+
+            @foreach($categories as $cat)
+            <a href="{{ route('services.index', ['category' => $cat->slug]) }}"
+               class="group whitespace-nowrap shrink-0 px-5 py-2.5 rounded-full text-xs uppercase tracking-widest
+                      font-medium border transition-all no-underline
+                      {{ $categorySlug === $cat->slug ? 'bg-custom-primary border-custom-primary text-white' : 'bg-transparent border-white/15 text-white/60 hover:border-white/40 hover:text-white' }}">
+                <span>{{ $cat->name }}</span>
+                <span class="ml-2 text-[10px] {{ $categorySlug === $cat->slug ? 'text-white/80' : 'text-white/30 group-hover:text-white/60' }}">{{ $cat->services->count() }}</span>
+            </a>
             @endforeach
+
         </div>
     </div>
 </div>
 
-{{-- ── SERVICES CONTENT ── --}}
-<div class="bg-gray-50 py-16">
-    <div class="max-w-5xl mx-auto px-6 flex flex-col gap-16" id="services-container">
 
-        @forelse($categories as $category)
-        <div class="category-section" id="cat-{{ $category->id }}">
+{{-- ── SERVICES CATALOGUE ── --}}
+<section class="py-20 md:py-28 px-6">
+    <div class="max-w-7xl mx-auto">
 
-            {{-- Category heading --}}
-            <div class="flex items-center gap-3 pb-3 border-b-2 border-gray-200 mb-6">
-                <div class="w-8 h-8 rounded-lg bg-red-50 flex items-center justify-center shrink-0">
-                    @include('components.service-icon', ['icon' => $category->icon ?? 'wrench'])
-                </div>
-                <h2 class="text-xl font-extrabold text-gray-900">{{ $category->name }}</h2>
-                <span class="ml-auto text-xs text-gray-400 font-medium">{{ $category->services->count() }} services</span>
+        {{-- Category context header --}}
+        <div class="mb-16 flex flex-col md:flex-row md:items-end md:justify-between gap-4">
+            <div>
+                <span class="text-custom-primary text-xs font-bold tracking-[0.3em] uppercase mb-3 block">
+                    {{ $categorySlug === 'all' ? 'Catalogue' : 'Category' }}
+                </span>
+                <h2 class="text-2xl md:text-3xl font-bold text-white">
+                    {{ $activeCategoryName }}
+                </h2>
+                @if($activeCategoryDesc)
+                <p class="text-white/45 mt-2 text-sm">{{ $activeCategoryDesc }}</p>
+                @endif
             </div>
-
-            @if($category->description)
-            <p class="text-sm text-gray-500 -mt-3 mb-6 leading-relaxed">{{ $category->description }}</p>
+            @if($services->count() > 0)
+            <div class="text-sm text-white/30 shrink-0">
+                Showing {{ $showingFrom }}–{{ $showingTo }} of {{ $services->total() }}
+            </div>
             @endif
+        </div>
 
-            {{-- Service cards grid --}}
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                @foreach($category->services as $service)
-                <div class="bg-white rounded-2xl p-5 border border-gray-100 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 flex flex-col gap-3">
+        {{-- Service rows --}}
+        @if($services->isEmpty())
+        <div class="py-24 text-center border border-white/5 rounded-2xl bg-[#1a1a1a]">
+            <p class="text-white/40">No services in this category yet.</p>
+        </div>
+        @else
 
-                    {{-- Top row: icon + price --}}
-                    <div class="flex items-start justify-between">
-                        <div class="w-10 h-10 rounded-xl bg-red-50 flex items-center justify-center shrink-0 text-custom-primary">
-                            @include('components.service-icon', ['icon' => $service->icon])
-                        </div>
-                        <div class="text-right">
-                            <div class="text-[10px] text-gray-400 uppercase tracking-widest">
-                                {{ $service->price_is_estimate ? 'From' : 'Price' }}
-                            </div>
-                            <div class="text-sm font-extrabold text-gray-900">
-                                KES {{ number_format($service->price_from) }}
-                                @if($service->price_to)
-                                <span class="text-xs font-normal text-gray-400">
-                                    – {{ number_format($service->price_to) }}
-                                </span>
-                                @endif
-                            </div>
-                        </div>
+        <div class="space-y-24 md:space-y-32">
+            @foreach($services as $idx => $service)
+            @php
+                $globalIdx = ($services->currentPage() - 1) * $services->perPage() + $idx;
+                $isReversed = $globalIdx % 2 === 1;
+                $serviceImg = $service->image
+                    ? asset($service->image)
+                    : asset($globalIdx % 2 === 0 ? 'assets/images/hero/home-clinic.jpg' : 'assets/images/hero/home-clinic.jpg');
+            @endphp
+            <article class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+
+                {{-- Image panel --}}
+                <div class="relative aspect-[4/3] rounded-2xl overflow-hidden {{ $isReversed ? 'lg:order-2' : '' }}">
+                    <img src="{{ $serviceImg }}"
+                         alt="{{ $service->name }}"
+                         class="w-full h-full object-cover">
+                    <div class="absolute inset-0 border border-white/10 rounded-2xl pointer-events-none"></div>
+
+                    {{-- Icon overlay --}}
+                    <div class="absolute top-5 left-5 w-12 h-12 rounded-full bg-black/70 backdrop-blur-sm
+                                border border-white/10 flex items-center justify-center text-custom-primary">
+                        @include('components.service-icon', ['icon' => $service->icon])
                     </div>
 
-                    {{-- Name + desc --}}
-                    <div class="flex flex-col gap-1">
-                        <h3 class="text-sm font-bold text-gray-900">{{ $service->name }}</h3>
-                        <p class="text-xs text-gray-500 leading-relaxed">{{ $service->description }}</p>
+                    {{-- Category badge --}}
+                    <div class="absolute top-5 right-5 px-3 py-1.5 bg-black/70 backdrop-blur-sm
+                                border border-white/10 rounded-full">
+                        <span class="text-[10px] uppercase tracking-widest text-white/80">
+                            {{ $service->serviceCategory->name ?? '' }}
+                        </span>
                     </div>
+                </div>
 
-                    {{-- Footer: duration + book --}}
-                    <div class="flex items-center justify-between pt-3 border-t border-gray-100 mt-auto">
-                        <span class="flex items-center gap-1.5 text-xs text-gray-400">
-                            @if($service->duration_minutes)
-                            <svg class="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                <circle cx="12" cy="12" r="10"/>
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6l4 2"/>
+                {{-- Text panel --}}
+                <div class="{{ $isReversed ? 'lg:order-1' : '' }}">
+                    <span class="text-custom-primary text-xs font-bold tracking-[0.3em] uppercase mb-4 block">
+                        {{ str_pad($globalIdx + 1, 2, '0', STR_PAD_LEFT) }} — Service
+                    </span>
+                    <h3 class="text-3xl md:text-4xl font-bold text-white mb-6 leading-tight">
+                        {{ $service->name }}
+                    </h3>
+                    <p class="text-white/65 text-lg leading-relaxed mb-8">
+                        {{ $service->long_description ?: $service->description }}
+                    </p>
+
+                    {{-- Duration + price meta --}}
+                    <div class="flex flex-wrap gap-6 mb-10 text-sm">
+                        @if($service->duration_minutes)
+                        <div class="flex items-center gap-2 text-white/60">
+                            <svg class="w-4 h-4 text-custom-primary shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <circle cx="12" cy="12" r="10"/><path stroke-linecap="round" d="M12 6v6l4 2"/>
                             </svg>
                             @if($service->duration_minutes < 60)
                                 {{ $service->duration_minutes }} mins
                             @elseif($service->duration_minutes % 60 === 0)
                                 {{ $service->duration_minutes / 60 }} {{ Str::plural('hr', $service->duration_minutes / 60) }}
                             @else
-                                {{ floor($service->duration_minutes / 60) }}h {{ $service->duration_minutes % 60 }}m
+                                {{ floor($service->duration_minutes / 60) }}-{{ ceil($service->duration_minutes / 60) }} hours
                             @endif
-                            @else
-                            <span class="text-gray-300">—</span>
-                            @endif
-                        </span>
+                        </div>
+                        @endif
+                        @if($service->price_from)
+                        <div class="flex items-center gap-2 text-white/60">
+                            <svg class="w-4 h-4 text-custom-primary shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A2 2 0 013 12V7a4 4 0 014-4z"/>
+                            </svg>
+                            From KES {{ number_format($service->price_from) }}
+                        </div>
+                        @endif
+                    </div>
 
-                        <a href="{{ route('booking.index', ['service' => $service->id]) }}"
-                           class="inline-flex items-center gap-1 text-xs font-bold text-custom-primary hover:gap-2 no-underline transition-all duration-200
-                                  bg-red-50 hover:bg-red-100 px-3 py-1.5 rounded-lg">
-                            Book Now
-                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                    {{-- CTAs --}}
+                    <div class="flex flex-col sm:flex-row gap-4">
+                        @if($service->slug)
+                        <a href="{{ route('services.show', $service->slug) }}"
+                           class="inline-flex items-center justify-center gap-2 px-6 py-3.5 bg-white text-[#111111]
+                                  font-semibold rounded-md hover:bg-white/90 transition-colors no-underline">
+                            Full details
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
                             </svg>
                         </a>
+                        @endif
+                        <a href="{{ route('booking.index', ['service' => $service->id]) }}"
+                           class="inline-flex items-center justify-center px-6 py-3.5 bg-custom-primary text-white
+                                  font-semibold rounded-md hover:bg-red-700 transition-colors no-underline
+                                  shadow-[0_4px_14px_rgba(211,30,36,0.30)]">
+                            Book this service
+                        </a>
                     </div>
-
                 </div>
+
+            </article>
+            @endforeach
+        </div>
+
+        {{-- ── PAGINATION ── --}}
+        @if($services->lastPage() > 1)
+        <nav aria-label="Pagination" class="flex items-center justify-center gap-2 mt-20">
+
+            {{-- Prev --}}
+            @if($services->onFirstPage())
+            <span class="w-10 h-10 flex items-center justify-center rounded-full border border-white/10 text-white/25 cursor-not-allowed">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
+            </span>
+            @else
+            <a href="{{ $services->previousPageUrl() }}#services-list-top"
+               class="w-10 h-10 flex items-center justify-center rounded-full border border-white/15 text-white/60
+                      hover:text-white hover:border-white/40 transition-colors no-underline">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
+            </a>
+            @endif
+
+            {{-- Page numbers --}}
+            <div class="flex items-center gap-1 mx-2">
+                @php
+                    $pages = [];
+                    $delta = 1;
+                    for ($i = 1; $i <= $services->lastPage(); $i++) {
+                        if ($i === 1 || $i === $services->lastPage() ||
+                            ($i >= $services->currentPage() - $delta && $i <= $services->currentPage() + $delta)) {
+                            $pages[] = $i;
+                        } elseif (end($pages) !== 'ellipsis') {
+                            $pages[] = 'ellipsis';
+                        }
+                    }
+                @endphp
+                @foreach($pages as $p)
+                    @if($p === 'ellipsis')
+                    <span class="px-2 text-white/30 text-sm select-none">…</span>
+                    @else
+                    <a href="{{ $services->url($p) }}#services-list-top"
+                       class="min-w-[40px] h-10 px-3 rounded-full text-sm font-medium transition-all no-underline
+                              flex items-center justify-center
+                              {{ $p === $services->currentPage() ? 'bg-custom-primary text-white' : 'text-white/60 hover:text-white hover:bg-white/5' }}"
+                       aria-current="{{ $p === $services->currentPage() ? 'page' : 'false' }}">
+                        {{ $p }}
+                    </a>
+                    @endif
                 @endforeach
             </div>
-        </div>
-        @empty
-        <div class="text-center py-20 text-gray-400">
-            <svg class="w-12 h-12 mx-auto mb-3 text-gray-300" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M11.42 15.17L17.25 21A2.652 2.652 0 0021 17.25l-5.877-5.877M11.42 15.17l2.496-3.03c.317-.384.74-.626 1.208-.766M11.42 15.17l-4.655 5.653a2.548 2.548 0 11-3.586-3.586l6.837-5.63m5.108-.233c.55-.164 1.163-.188 1.743-.14a4.5 4.5 0 004.486-6.336l-3.276 3.277a3.004 3.004 0 01-2.25-2.25l3.276-3.276a4.5 4.5 0 00-6.336 4.486c.091 1.076-.071 2.264-.904 2.95l-.102.085m-1.745 1.437L5.909 7.5H4.5L2.25 3.75l1.5-1.5L7.5 4.5v1.409l4.26 4.26m-1.745 1.437l1.745-1.437m6.615 8.206L15.75 15.75M4.867 19.125h.008v.008h-.008v-.008z"/>
-            </svg>
-            <p class="text-sm">No services available at the moment. Please check back soon.</p>
-        </div>
-        @endforelse
 
-    </div>
-</div>
+            {{-- Next --}}
+            @if($services->hasMorePages())
+            <a href="{{ $services->nextPageUrl() }}#services-list-top"
+               class="w-10 h-10 flex items-center justify-center rounded-full border border-white/15 text-white/60
+                      hover:text-white hover:border-white/40 transition-colors no-underline">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+            </a>
+            @else
+            <span class="w-10 h-10 flex items-center justify-center rounded-full border border-white/10 text-white/25 cursor-not-allowed">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+            </span>
+            @endif
 
-{{-- ── CTA BANNER ── --}}
-<section class="bg-custom-primary py-14 text-center px-6">
-    <div class="max-w-2xl mx-auto flex flex-col items-center gap-4">
-        <h2 class="text-2xl md:text-3xl font-extrabold text-white">Not sure what your car needs?</h2>
-        <p class="text-red-200 text-sm leading-relaxed">
-            Bring it in for a free basic inspection. Our experts will advise you on the best services for your vehicle.
-        </p>
-        <a href="{{ url('/contact') }}"
-           class="inline-flex items-center bg-white text-custom-primary font-bold text-sm px-8 py-3 rounded-xl no-underline
-                  hover:bg-gray-100 transition-colors duration-200 shadow-lg mt-2">
-            Contact Us Today
-        </a>
+        </nav>
+        @endif
+
+        @endif {{-- end services not empty --}}
+
     </div>
 </section>
 
-@push('scripts-stack')
-<script>
-document.addEventListener('DOMContentLoaded', () => {
-    const tabs     = document.querySelectorAll('.category-tab');
-    const sections = document.querySelectorAll('.category-section');
-    const nav      = document.getElementById('category-nav');
 
-    function setActive(targetId) {
-        // Update tab styles
-        tabs.forEach(tab => {
-            const isActive = tab.dataset.target === targetId;
-            tab.classList.toggle('bg-custom-primary',  isActive);
-            tab.classList.toggle('text-white',          isActive);
-            tab.classList.toggle('border-custom-primary', isActive);
-            tab.classList.toggle('bg-white',            !isActive);
-            tab.classList.toggle('text-gray-600',       !isActive);
-            tab.classList.toggle('border-gray-300',     !isActive);
-        });
+{{-- ── BOOKING CTA ── --}}
+<x-quick-booking />
 
-        if (targetId === 'all') {
-            sections.forEach(s => s.style.display = '');
-        } else {
-            sections.forEach(s => {
-                s.style.display = s.id === targetId ? '' : 'none';
-            });
-        }
-    }
-
-    tabs.forEach(tab => {
-        tab.addEventListener('click', () => {
-            const targetId = tab.dataset.target;
-            setActive(targetId);
-
-            // Scroll past the sticky nav
-            const container = document.getElementById('services-container');
-            if (container) {
-                const offset = (nav?.offsetHeight ?? 0) + 24;
-                const top    = container.getBoundingClientRect().top + window.scrollY - offset;
-                window.scrollTo({ top, behavior: 'smooth' });
-            }
-        });
-    });
-
-    // Support deep-linking: /services#cat-3
-    const hash = window.location.hash.replace('#', '');
-    if (hash && document.getElementById(hash)) {
-        setActive(hash);
-        setTimeout(() => {
-            const el     = document.getElementById(hash);
-            const offset = (nav?.offsetHeight ?? 0) + 24;
-            const top    = el.getBoundingClientRect().top + window.scrollY - offset;
-            window.scrollTo({ top, behavior: 'smooth' });
-        }, 100);
-    }
-});
-</script>
-@endpush
+</div>
 
 @endsection

@@ -54,20 +54,25 @@ class FeedbackController extends Controller
 
         // Validate — on failure Laravel redirects back() with errors automatically
         $validated = $request->validate([
-            'name'        => 'required|string|max:120',
-            'phone'       => 'nullable|string|max:20',
-            'vehicle'     => 'nullable|string|max:30',
-            'service'     => 'nullable|string|max:60',
-            'rating'      => 'required|integer|min:1|max:5',
-            'liked'       => 'nullable|string|max:1000',
-            'suggestions' => 'nullable|string|max:1000',
-            'recommend'   => 'required|in:yes,no',
+            'rating'       => 'required|integer|min:1|max:5',
+            'title'        => 'nullable|string|max:200',
+            'body'         => 'nullable|string|max:2000',
+            'recommend'    => 'required|in:yes,no',
+            'display_name' => 'nullable|string|max:120',
         ]);
 
-        // Save feedback
-        CustomerFeedback::create(array_merge($validated, [
+        // Save feedback, mapping display_name → name (anonymous fallback)
+        CustomerFeedback::create([
             'feedback_token_id' => $record->id,
-        ]));
+            'name'              => $validated['display_name'] ?: 'Anonymous',
+            'phone'             => $record->customer_phone,
+            'vehicle'           => $record->vehicle_reg,
+            'service'           => $record->service,
+            'title'             => $validated['title'] ?? null,
+            'rating'            => $validated['rating'],
+            'liked'             => $validated['body'] ?? null,
+            'recommend'         => $validated['recommend'],
+        ]);
 
         // Mark token as used AFTER saving
         $record->update(['used' => true]);

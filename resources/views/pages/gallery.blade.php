@@ -1,3 +1,10 @@
+@php
+    $pageTitle       = 'Gallery | Premax Automotive Studio — Nairobi';
+    $pageDescription = 'Browse the Premax Automotive Studio photo gallery — real transformations, pristine detailing and precision work on luxury vehicles in Nairobi.';
+    $pageKeyWords    = 'car detailing gallery nairobi, before after detailing, premax gallery, car transformation nairobi';
+    $pageImage       = asset('assets/images/hero/home-clinic.jpg');
+@endphp
+
 @extends('layouts.default-menu-page')
 
 @section('content')

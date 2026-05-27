@@ -1,2 +1,14 @@
 User-agent: *
-Disallow:
+Disallow: /cart
+Disallow: /checkout
+Disallow: /account
+Disallow: /login
+Disallow: /signup
+Disallow: /mpesa/
+Disallow: /booking/success
+Disallow: /feedback/thanks
+Disallow: /feedback/expired
+Disallow: /feedback/used
+Disallow: /feedback/invalid
+
+Sitemap: https://premaxautoservice.co.ke/sitemap.xml

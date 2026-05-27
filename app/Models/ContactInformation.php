@@ -248,6 +248,15 @@ class ContactInformation extends Model
         return "Hello Premax Autocare, I'd like to make an inquiry about your services. Please assist me with more information.";
     }
 
+    public static function primaryEmail(): ?string
+    {
+        $email = static::where('is_primary', true)
+            ->where('is_active', true)
+            ->value('email_primary');
+
+        return $email ?: null;
+    }
+
     // ── Scopes ────────────────────────────────────────────────────────────
 
     public function scopeActive($query)

@@ -17,7 +17,11 @@ class Service extends Model
         'name',
         'slug',
         'description',
+        'long_description',
         'icon',
+        'image',
+        'features',
+        'process',
         'price_from',
         'price_to',
         'price_is_estimate',
@@ -31,6 +35,8 @@ class Service extends Model
         'price_is_estimate' => 'boolean',
         'is_popular'        => 'boolean',
         'is_active'         => 'boolean',
+        'features'          => 'array',
+        'process'           => 'array',
     ];
 
     // ── Relationships ─────────────────────────────────────────────────────

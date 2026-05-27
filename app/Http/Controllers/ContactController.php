@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\AdminAlertMail;
 use App\Models\ContactMessage;
 use App\Models\ContactInformation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Mail;
 
 class ContactController extends Controller
 {
@@ -36,6 +38,21 @@ class ContactController extends Controller
         ]);
 
         ContactMessage::create($validated);
+
+        $adminEmail = ContactInformation::primaryEmail();
+        if ($adminEmail) {
+            Mail::to($adminEmail)->send(new AdminAlertMail(
+                alertSubject: 'New contact message from ' . $validated['name'],
+                type: 'Contact Form',
+                rows: [
+                    ['label' => 'Name',    'value' => $validated['name']],
+                    ['label' => 'Email',   'value' => $validated['email']],
+                    ['label' => 'Phone',   'value' => $validated['phone'] ?? '—'],
+                    ['label' => 'Received', 'value' => now()->format('d M Y, H:i')],
+                ],
+                note: $validated['message'],
+            ));
+        }
 
         return redirect()
             ->route('contact.index')

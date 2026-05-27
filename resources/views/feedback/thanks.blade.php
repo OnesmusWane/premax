@@ -1,21 +1,50 @@
 @extends('layouts.default-menu-page')
 @section('content')
-<div class="bg-gray-100 min-h-screen flex items-center justify-center px-4">
-    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-10 max-w-md w-full text-center">
-        <div class="w-14 h-14 rounded-full bg-green-50 flex items-center justify-center mx-auto mb-4">
-            <svg class="w-7 h-7 text-green-500" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+
+<div class="bg-[#111111] min-h-screen pt-36 pb-24 px-6 flex items-center justify-center">
+    <div class="max-w-xl mx-auto text-center" id="ty-wrap" style="opacity:0;transform:translateY(20px)">
+
+        <div class="w-20 h-20 rounded-full bg-custom-primary/10 border-2 border-custom-primary
+                    flex items-center justify-center mx-auto mb-8">
+            <svg class="w-8 h-8 text-custom-primary" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
             </svg>
         </div>
-        <h2 class="text-xl font-extrabold text-gray-900 mb-2">Thank You!</h2>
-        <p class="text-sm text-gray-500 leading-relaxed">
-            Your feedback has been submitted successfully.<br>
-            We appreciate you taking the time — it helps us serve you better.
+
+        <span class="text-custom-primary text-xs font-bold tracking-[0.3em] uppercase mb-4 block">
+            Thank You
+        </span>
+        <h1 class="text-4xl md:text-5xl font-bold text-white mb-6 leading-tight">
+            Your review has been received.
+        </h1>
+        <p class="text-white/55 text-lg max-w-md mx-auto mb-10">
+            Feedback from clients like you is how we sharpen our craft.
+            We are grateful for your time.
         </p>
+
         <a href="{{ url('/') }}"
-           class="inline-flex items-center gap-2 mt-6 bg-custom-primary hover:bg-red-800 text-white font-bold text-sm px-6 py-2.5 rounded-xl no-underline transition-colors duration-200">
-            Back to Home
+           class="inline-flex items-center gap-2 px-8 py-3.5 bg-custom-primary text-white font-semibold
+                  rounded-md hover:bg-red-700 transition-colors shadow-[0_4px_14px_rgba(211,30,36,0.28)]">
+            Return home
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+            </svg>
         </a>
+
     </div>
 </div>
+
+@push('scripts-stack')
+<script>
+(function () {
+    var wrap = document.getElementById('ty-wrap');
+    setTimeout(function () {
+        wrap.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+        wrap.style.opacity    = '1';
+        wrap.style.transform  = 'translateY(0)';
+    }, 60);
+})();
+</script>
+@endpush
+
 @endsection

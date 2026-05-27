@@ -11,12 +11,15 @@
 @endphp
 
 @if($team->isNotEmpty())
-<section class="bg-white py-20">
-    <div class="max-w-5xl mx-auto px-6">
+<section class="py-24 px-6 border-t border-white/5 bg-[#111111]">
+    <div class="max-w-7xl mx-auto">
 
-        <div class="text-center max-w-xl mx-auto mb-12">
-            <h2 class="text-2xl md:text-3xl font-extrabold text-gray-900 tracking-tight">Meet Our Team</h2>
-            <p class="mt-2 text-gray-500 text-sm">The skilled hands behind every clean, every fix, every satisfied customer.</p>
+        <div class="mb-16">
+            <span class="text-custom-primary text-xs font-bold tracking-[0.25em] uppercase mb-4 block">
+                The Team
+            </span>
+            <h2 class="text-3xl md:text-4xl font-bold text-white mb-3">Master Craftsmen.</h2>
+            <p class="text-white/40 text-sm">Decades of factory training, distilled into one studio.</p>
         </div>
 
         @if($team->count() <= 3)
@@ -32,8 +35,8 @@
         <div class="relative">
 
             {{-- Fade edge hints --}}
-            <div class="pointer-events-none absolute left-0 top-0 bottom-6 w-10 bg-gradient-to-r from-white to-transparent z-10 hidden md:block"></div>
-            <div class="pointer-events-none absolute right-0 top-0 bottom-6 w-10 bg-gradient-to-l from-white to-transparent z-10 hidden md:block"></div>
+            <div class="pointer-events-none absolute left-0 top-0 bottom-6 w-16 bg-gradient-to-r from-[#111111] to-transparent z-10 hidden md:block"></div>
+            <div class="pointer-events-none absolute right-0 top-0 bottom-6 w-16 bg-gradient-to-l from-[#111111] to-transparent z-10 hidden md:block"></div>
 
             {{-- Scroll track --}}
             <div id="team-track"
@@ -50,11 +53,11 @@
             </div>
 
             {{-- Dot indicators --}}
-            <div class="flex justify-center gap-2 mt-4" id="team-dots">
+            <div class="flex justify-center gap-2 mt-6" id="team-dots">
                 @foreach($team as $i => $member)
                 <button type="button"
-                        class="team-dot w-2 h-2 rounded-full transition-all duration-300
-                               {{ $i === 0 ? 'bg-custom-primary w-5' : 'bg-gray-300' }}"
+                        class="team-dot h-1.5 rounded-full transition-all duration-300
+                               {{ $i === 0 ? 'bg-custom-primary w-6' : 'bg-white/20 w-1.5' }}"
                         data-index="{{ $i }}"
                         aria-label="Go to {{ $member->name }}">
                 </button>
@@ -75,7 +78,6 @@
     const dots  = document.querySelectorAll('.team-dot');
     if (!track) return;
 
-    // ── Drag to scroll ──────────────────────────────────
     let isDown = false, startX = 0, scrollLeft = 0;
 
     track.addEventListener('mousedown', e => {
@@ -90,13 +92,13 @@
         track.scrollLeft = scrollLeft - (e.pageX - track.offsetLeft - startX) * 1.5;
     });
 
-    // ── Dot sync ────────────────────────────────────────
     function setActiveDot(index) {
         dots.forEach((dot, i) => {
-            dot.classList.toggle('bg-custom-primary', i === index);
-            dot.classList.toggle('w-5',               i === index);
-            dot.classList.toggle('bg-gray-300',       i !== index);
-            dot.classList.toggle('w-2',               i !== index);
+            const active = i === index;
+            dot.classList.toggle('bg-custom-primary', active);
+            dot.classList.toggle('w-6',               active);
+            dot.classList.toggle('bg-white/20',       !active);
+            dot.classList.toggle('w-1.5',             !active);
         });
     }
 
