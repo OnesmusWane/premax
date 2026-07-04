@@ -136,7 +136,7 @@
                         <input id="reg-number" type="text" placeholder=" "
                                class="block w-full bg-transparent border-0 border-b border-white/20 py-3 text-white text-sm
                                       focus:ring-0 focus:border-custom-primary focus:outline-none transition-colors peer placeholder-transparent">
-                        <label class="absolute left-0 -top-3.5 text-xs text-white/40 transition-all duration-200
+                        <label for="reg-number" class="absolute left-0 -top-3.5 text-xs text-white/40 transition-all duration-200
                                       peer-placeholder-shown:text-sm peer-placeholder-shown:top-3 peer-placeholder-shown:text-white/35
                                       peer-focus:-top-3.5 peer-focus:text-xs peer-focus:text-custom-primary">
                             Registration Number (e.g. KCA 123A)
@@ -147,7 +147,7 @@
                         <input id="make-model" type="text" placeholder=" "
                                class="block w-full bg-transparent border-0 border-b border-white/20 py-3 text-white text-sm
                                       focus:ring-0 focus:border-custom-primary focus:outline-none transition-colors peer placeholder-transparent">
-                        <label class="absolute left-0 -top-3.5 text-xs text-white/40 transition-all duration-200
+                        <label for="make-model" class="absolute left-0 -top-3.5 text-xs text-white/40 transition-all duration-200
                                       peer-placeholder-shown:text-sm peer-placeholder-shown:top-3 peer-placeholder-shown:text-white/35
                                       peer-focus:-top-3.5 peer-focus:text-xs peer-focus:text-custom-primary">
                             Make & Model <span class="text-white/20">(optional)</span>
@@ -181,7 +181,7 @@
                                class="block w-full bg-transparent border-0 border-b border-white/20 py-3 text-white text-sm
                                       focus:ring-0 focus:border-custom-primary focus:outline-none transition-colors
                                       [color-scheme:dark]">
-                        <label class="absolute left-0 -top-3.5 text-xs text-white/40">Preferred Date</label>
+                        <label for="booking-date" class="absolute left-0 -top-3.5 text-xs text-white/40">Preferred Date</label>
                         <p id="err-date" class="hidden text-xs text-red-400 mt-2">Please select a date.</p>
                     </div>
                     <div>
@@ -223,7 +223,7 @@
                         <input id="full-name" type="text" placeholder=" "
                                class="block w-full bg-transparent border-0 border-b border-white/20 py-3 text-white text-sm
                                       focus:ring-0 focus:border-custom-primary focus:outline-none transition-colors peer placeholder-transparent">
-                        <label class="absolute left-0 -top-3.5 text-xs text-white/40 transition-all duration-200
+                        <label for="full-name" class="absolute left-0 -top-3.5 text-xs text-white/40 transition-all duration-200
                                       peer-placeholder-shown:text-sm peer-placeholder-shown:top-3 peer-placeholder-shown:text-white/35
                                       peer-focus:-top-3.5 peer-focus:text-xs peer-focus:text-custom-primary">
                             Full Name
@@ -234,7 +234,7 @@
                         <input id="phone" type="tel" placeholder=" "
                                class="block w-full bg-transparent border-0 border-b border-white/20 py-3 text-white text-sm
                                       focus:ring-0 focus:border-custom-primary focus:outline-none transition-colors peer placeholder-transparent">
-                        <label class="absolute left-0 -top-3.5 text-xs text-white/40 transition-all duration-200
+                        <label for="phone" class="absolute left-0 -top-3.5 text-xs text-white/40 transition-all duration-200
                                       peer-placeholder-shown:text-sm peer-placeholder-shown:top-3 peer-placeholder-shown:text-white/35
                                       peer-focus:-top-3.5 peer-focus:text-xs peer-focus:text-custom-primary">
                             Phone Number
@@ -245,7 +245,7 @@
                         <input id="email" type="email" placeholder=" "
                                class="block w-full bg-transparent border-0 border-b border-white/20 py-3 text-white text-sm
                                       focus:ring-0 focus:border-custom-primary focus:outline-none transition-colors peer placeholder-transparent">
-                        <label class="absolute left-0 -top-3.5 text-xs text-white/40 transition-all duration-200
+                        <label for="email" class="absolute left-0 -top-3.5 text-xs text-white/40 transition-all duration-200
                                       peer-placeholder-shown:text-sm peer-placeholder-shown:top-3 peer-placeholder-shown:text-white/35
                                       peer-focus:-top-3.5 peer-focus:text-xs peer-focus:text-custom-primary">
                             Email <span class="text-white/20">(optional)</span>
@@ -255,7 +255,7 @@
                         <textarea id="notes" rows="3" placeholder=" "
                                   class="block w-full bg-transparent border-0 border-b border-white/20 py-3 text-white text-sm
                                          focus:ring-0 focus:border-custom-primary focus:outline-none transition-colors peer placeholder-transparent resize-none"></textarea>
-                        <label class="absolute left-0 -top-3.5 text-xs text-white/40 transition-all duration-200
+                        <label for="notes" class="absolute left-0 -top-3.5 text-xs text-white/40 transition-all duration-200
                                       peer-placeholder-shown:text-sm peer-placeholder-shown:top-3 peer-placeholder-shown:text-white/35
                                       peer-focus:-top-3.5 peer-focus:text-xs peer-focus:text-custom-primary">
                             Additional Notes <span class="text-white/20">(optional)</span>
