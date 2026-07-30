@@ -58,7 +58,7 @@
                     <img id="main-image"
                          src="{{ asset($galleryImages[0]) }}"
                          alt="{{ $product->name }}"
-                         class="w-full h-full object-cover transition-opacity duration-300">
+                         class="w-full h-full object-cover transition-opacity duration-300" loading="eager" fetchpriority="high" decoding="async">
                     @else
                     <div class="w-full h-full flex items-center justify-center">
                         <svg class="w-16 h-16 text-white/10" fill="none" stroke="currentColor" stroke-width="1" viewBox="0 0 24 24">
@@ -75,7 +75,7 @@
                             data-src="{{ asset($img) }}"
                             class="thumb-btn aspect-square rounded-lg overflow-hidden border transition-all
                                    {{ $i === 0 ? 'border-custom-primary' : 'border-white/10 hover:border-white/30' }}">
-                        <img src="{{ asset($img) }}" alt="" class="w-full h-full object-cover">
+                        <img src="{{ asset($img) }}" alt="" class="w-full h-full object-cover" loading="lazy" decoding="async">
                     </button>
                     @endforeach
                 </div>
@@ -209,7 +209,7 @@
                 <a href="{{ route('shop.show', $rel->slug) }}" class="no-underline block">
                     <div class="relative aspect-square bg-[#222] overflow-hidden">
                         @if($rel->image)
-                        <img src="{{ asset($rel->image) }}" alt="{{ $rel->name }}"
+                        <img src="{{ asset($rel->image) }}" alt="{{ $rel->name }}" loading="lazy" decoding="async"
                              class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
                         @endif
                         <div class="absolute top-3 left-3">

@@ -7,11 +7,7 @@
 <html lang="en">
 <head>
     @include('pages.partials.global-head-tags')
-    @if(config('app.env') == 'local')
     @vite('resources/js/app.js')
-    @else
-    <script type="module">{!! Vite::content('resources/js/app.js') !!}</script>
-    @endif
 </head>
 <body class="bg-[#111111]">
 
@@ -19,9 +15,9 @@
 
     {{-- ── LEFT IMAGE ── --}}
     <div class="hidden lg:block relative">
-        <img src="{{ asset('assets/images/hero/signup.webp') }}"
+        <x-responsive-image path="assets/images/hero/signup.webp"
              alt=""
-             class="absolute inset-0 w-full h-full object-cover">
+             class="absolute inset-0 w-full h-full object-cover" :priority="true" />
         <div class="absolute inset-0 bg-gradient-to-t from-[#111111] via-black/30 to-transparent"></div>
 
         <div class="absolute bottom-12 left-12 right-12">

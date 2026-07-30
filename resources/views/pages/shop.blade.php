@@ -48,9 +48,9 @@
 {{-- ── HERO ── --}}
 <section class="relative h-[55vh] min-h-[380px] flex items-end overflow-hidden">
     <div class="absolute inset-0 z-0">
-        <img src="{{ asset('assets/images/hero/shop.webp') }}"
+        <x-responsive-image path="assets/images/hero/shop.webp"
              alt="Premax Boutique"
-             class="w-full h-full object-cover scale-105">
+             class="w-full h-full object-cover scale-105" :priority="true" />
         <div class="absolute inset-0 bg-black/65"></div>
         <div class="absolute inset-0 bg-gradient-to-t from-[#111111] via-[#111111]/40 to-transparent"></div>
     </div>
@@ -134,7 +134,7 @@
                 <a href="{{ route('shop.show', $product->slug) }}" class="no-underline block">
                     <div class="relative aspect-square bg-[#222] overflow-hidden">
                         @if($product->image)
-                        <img src="{{ asset($product->image) }}" alt="{{ $product->name }}"
+                        <img src="{{ asset($product->image) }}" alt="{{ $product->name }}" loading="lazy" decoding="async"
                              class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
                         @else
                         <div class="w-full h-full flex items-center justify-center">

@@ -86,7 +86,7 @@
                     {{-- Thumb --}}
                     <div class="w-14 h-14 rounded-xl overflow-hidden bg-[#252525] shrink-0 border border-white/5">
                         @if($item->product?->image)
-                            <img src="{{ asset($item->product->image) }}"
+                            <img src="{{ asset($item->product->image) }}" loading="lazy" decoding="async"
                                  alt="{{ $item->product_name }}"
                                  class="w-full h-full object-cover">
                         @else

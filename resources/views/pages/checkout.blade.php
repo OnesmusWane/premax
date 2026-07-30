@@ -177,7 +177,7 @@
                     <li class="flex items-center gap-3">
                         <div class="relative w-12 h-12 rounded-lg overflow-hidden bg-[#222] shrink-0">
                             @if(!empty($item['image']))
-                            <img src="{{ asset($item['image']) }}" alt="{{ $item['name'] }}" class="w-full h-full object-cover">
+                            <img src="{{ asset($item['image']) }}" alt="{{ $item['name'] }}" class="w-full h-full object-cover" loading="lazy" decoding="async">
                             @endif
                             <span class="absolute -top-1 -right-1 w-4.5 h-4.5 rounded-full bg-white/20 text-white text-[9px]
                                          flex items-center justify-center font-bold tabular-nums">

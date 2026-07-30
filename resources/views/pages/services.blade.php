@@ -41,9 +41,9 @@
 {{-- ── PAGE HERO (full-bleed image) ── --}}
 <section class="relative h-[55vh] min-h-[420px] flex items-end overflow-hidden">
     <div class="absolute inset-0 z-0">
-        <img src="{{ asset('assets/images/hero/service.webp') }}"
+        <x-responsive-image path="assets/images/hero/service.webp"
              alt="Premax Automotive Studio services"
-             class="w-full h-full object-cover scale-105">
+             class="w-full h-full object-cover scale-105" :priority="true" />
         <div class="absolute inset-0 bg-black/60"></div>
         <div class="absolute inset-0 bg-gradient-to-t from-[#111111] via-[#111111]/40 to-transparent"></div>
     </div>

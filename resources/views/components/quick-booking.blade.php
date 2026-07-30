@@ -205,7 +205,7 @@
             <div class="hidden lg:block relative h-full min-h-[520px] rounded-2xl overflow-hidden">
                 <img src="{{ asset('assets/images/booking.webp') }}"
                      alt="Luxury vehicle awaiting executive service"
-                     class="absolute inset-0 w-full h-full object-cover">
+                     class="absolute inset-0 w-full h-full object-cover" loading="lazy" decoding="async">
                 <div class="absolute inset-0 bg-gradient-to-t from-[#111111]/70 to-transparent"></div>
             </div>
 

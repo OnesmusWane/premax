@@ -8,7 +8,7 @@
     {{-- Portrait / Initials fallback --}}
     <div class="relative overflow-hidden bg-[#222]" style="aspect-ratio:3/4">
         @if($member->avatar_url)
-        <img src="{{ $member->avatar_url }}"
+        <img src="{{ $member->avatar_url }}" loading="lazy" decoding="async"
              alt="{{ $member->name }}"
              class="w-full h-full object-cover object-top">
         @else

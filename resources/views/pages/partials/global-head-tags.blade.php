@@ -1,10 +1,12 @@
 
 <meta charset="utf-8">
 
-{{-- Typography --}}
+{{-- Typography ── only the weights actually used across the templates (300/400/500/600/700/800);
+     italic and the wdth axis were requested but never used, so they're dropped. --}}
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wdth,wght@0,75..100,400..700;1,75..100,400..700&display=swap" rel="stylesheet">
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@300;400;500;600;700;800&display=swap">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -58,10 +60,7 @@
 <link rel="apple-touch-icon" href="{{ asset('assets/images/logos/apple-touch-icon.png') }}"  sizes="180x180">
 
 {{-- ── Styles ────────────────────────────────────────────────────────────────── --}}
-@if (config('app.env') == 'local')
-    @vite('resources/css/app.css')
-@else
-    <style>
-        {!! Vite::content('resources/css/app.css') !!}
-    </style>
+@if (config('app.env') != 'local')
+    <link rel="preload" as="style" href="{{ Vite::asset('resources/css/app.css') }}">
 @endif
+@vite('resources/css/app.css')

@@ -54,7 +54,7 @@
                     {{-- Image --}}
                     <div class="w-20 h-20 rounded-xl overflow-hidden bg-[#222] shrink-0">
                         @if($item['image'])
-                        <img src="{{ asset($item['image']) }}" alt="{{ $item['name'] }}" class="w-full h-full object-cover">
+                        <img src="{{ asset($item['image']) }}" alt="{{ $item['name'] }}" class="w-full h-full object-cover" loading="lazy" decoding="async">
                         @endif
                     </div>
 

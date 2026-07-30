@@ -36,7 +36,7 @@
     {{-- Author --}}
     <div class="flex items-center gap-3 pt-3 border-t border-white/5">
         @if($review->reviewer_avatar_url)
-        <img src="{{ $review->reviewer_avatar_url }}"
+        <img src="{{ $review->reviewer_avatar_url }}" loading="lazy" decoding="async"
              alt="{{ $review->reviewer_name }}"
              class="w-9 h-9 rounded-full object-cover shrink-0">
         @else

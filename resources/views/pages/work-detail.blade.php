@@ -120,12 +120,12 @@
         <span class="text-custom-primary text-xs font-bold tracking-[0.25em] uppercase mb-8 block">The Transformation</span>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div class="relative aspect-[4/3] rounded-2xl overflow-hidden">
-                <img src="{{ $case->before_image_url }}" alt="Before" class="w-full h-full object-cover">
+                <img src="{{ $case->before_image_url }}" alt="Before" class="w-full h-full object-cover" loading="lazy" decoding="async">
                 <div class="absolute bottom-4 left-4 px-3 py-1.5 bg-black/60 backdrop-blur-sm rounded-full
                             text-[10px] font-bold text-white/70 uppercase tracking-widest">Before</div>
             </div>
             <div class="relative aspect-[4/3] rounded-2xl overflow-hidden">
-                <img src="{{ $case->after_image_url }}" alt="After" class="w-full h-full object-cover">
+                <img src="{{ $case->after_image_url }}" alt="After" class="w-full h-full object-cover" loading="lazy" decoding="async">
                 <div class="absolute bottom-4 left-4 px-3 py-1.5 bg-custom-primary/80 backdrop-blur-sm rounded-full
                             text-[10px] font-bold text-white uppercase tracking-widest">After</div>
             </div>
@@ -222,7 +222,7 @@
         <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
             @foreach($case->gallery as $item)
             <div class="aspect-[4/3] rounded-xl overflow-hidden">
-                <img src="{{ $item->image_url }}"
+                <img src="{{ $item->image_url }}" loading="lazy" decoding="async"
                      alt="{{ $item->caption ?? $case->title }}"
                      class="w-full h-full object-cover hover:scale-105 transition-transform duration-500">
             </div>
@@ -246,7 +246,7 @@
                       hover:border-white/12 transition-colors duration-300 no-underline block">
                 <div class="aspect-[4/3] overflow-hidden bg-[#222]">
                     @if($rel->after_image_url)
-                    <img src="{{ $rel->after_image_url }}" alt="{{ $rel->title }}"
+                    <img src="{{ $rel->after_image_url }}" alt="{{ $rel->title }}" loading="lazy" decoding="async"
                          class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
                     @else
                     <img src="{{ asset('assets/images/car.avif') }}" alt="{{ $rel->title }}"

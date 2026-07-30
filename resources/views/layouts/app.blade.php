@@ -6,13 +6,7 @@
 	@yield('head-tags')
 
 	@stack('head-tags-stack')
-	@if (config('app.env') == 'local')
-		@vite('resources/js/app.js')
-	@else
-		<script type="module">
-			{!! Vite::content('resources/js/app.js') !!}
-		</script>
-	@endif
+	@vite('resources/js/app.js')
 </head>
 
 <body>

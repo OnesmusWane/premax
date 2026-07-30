@@ -85,9 +85,9 @@ $_schema = [
 
     {{-- Background --}}
     <div class="absolute inset-0 z-0">
-        <img src="{{ asset('assets/images/hero/home.webp') }}"
+        <x-responsive-image path="assets/images/hero/home.webp"
              alt="Premax Automotive Studio Nairobi — premium car detailing and ceramic coating facility"
-             class="w-full h-full object-cover object-center scale-105">
+             class="w-full h-full object-cover object-center scale-105" :priority="true" />
         <div class="absolute inset-0 bg-black/65"></div>
         <div class="absolute inset-0 bg-gradient-to-t from-[#111111] via-[#111111]/20 to-transparent"></div>
     </div>
@@ -201,9 +201,9 @@ $_schema = [
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center mb-28">
 
             <div class="relative aspect-[4/3] rounded-2xl overflow-hidden">
-                <img src="{{ asset('assets/images/hero/home-clinic.webp') }}"
+                <x-responsive-image path="assets/images/hero/home-clinic.webp"
                      alt="Premax Automotive Studio — dust-free car detailing bays and OEM diagnostic suites, Nairobi"
-                     class="w-full h-full object-cover">
+                     class="w-full h-full object-cover" />
                 <div class="absolute inset-0 border border-white/8 rounded-2xl pointer-events-none"></div>
             </div>
 
@@ -253,9 +253,9 @@ $_schema = [
             </div>
 
             <div class="relative aspect-[4/3] rounded-2xl overflow-hidden order-1 lg:order-2">
-                <img src="{{ asset('assets/images/hero/home-craft.webp') }}"
+                <x-responsive-image path="assets/images/hero/home-craft.webp"
                      alt="Factory-trained Premax technician performing luxury vehicle diagnostics and care in Nairobi"
-                     class="w-full h-full object-cover">
+                     class="w-full h-full object-cover" />
                 <div class="absolute inset-0 border border-white/8 rounded-2xl pointer-events-none"></div>
             </div>
 

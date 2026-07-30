@@ -41,8 +41,8 @@
 {{-- ── HERO ── --}}
 <section class="relative pt-40 pb-24 px-6 overflow-hidden">
     <div class="absolute inset-0">
-        <img src="{{ asset('assets/images/hero/work.webp') }}" alt="Premax Automotive Studio work"
-             class="w-full h-full object-cover">
+        <x-responsive-image path="assets/images/hero/work.webp" alt="Premax Automotive Studio work"
+             class="w-full h-full object-cover" :priority="true" />
         <div class="absolute inset-0 bg-black/65"></div>
         <div class="absolute inset-0 bg-gradient-to-t from-[#111111] via-[#111111]/30 to-transparent"></div>
         <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,rgba(211,30,36,0.07)_0%,transparent_60%)]"></div>
@@ -102,7 +102,7 @@
 
                         {{-- Before layer --}}
                         <div class="absolute inset-0">
-                            <img src="{{ $baCase->before_image_url }}" alt="Before"
+                            <img src="{{ $baCase->before_image_url }}" alt="Before" loading="lazy" decoding="async"
                                  class="w-full h-full object-cover">
                             <div class="absolute bottom-4 left-4 px-3 py-1.5 bg-black/60 backdrop-blur-sm rounded-full
                                         text-[10px] font-bold text-white/70 uppercase tracking-widest">Before</div>
@@ -111,7 +111,7 @@
                         {{-- After layer (clipped) --}}
                         <div class="absolute inset-0 overflow-hidden" data-ba-after
                              style="clip-path: inset(0 50% 0 0)">
-                            <img src="{{ $baCase->after_image_url }}" alt="After"
+                            <img src="{{ $baCase->after_image_url }}" alt="After" loading="lazy" decoding="async"
                                  class="w-full h-full object-cover">
                             <div class="absolute bottom-4 right-4 px-3 py-1.5 bg-custom-primary/85 backdrop-blur-sm rounded-full
                                         text-[10px] font-bold text-white uppercase tracking-widest">After</div>
@@ -206,10 +206,10 @@
                 {{-- Image --}}
                 <div class="aspect-[4/3] relative overflow-hidden bg-[#222]">
                     @if($case->after_image_url)
-                    <img src="{{ $case->after_image_url }}" alt="{{ $case->title }}"
+                    <img src="{{ $case->after_image_url }}" alt="{{ $case->title }}" loading="lazy" decoding="async"
                          class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
                     @elseif($case->before_image_url)
-                    <img src="{{ $case->before_image_url }}" alt="{{ $case->title }}"
+                    <img src="{{ $case->before_image_url }}" alt="{{ $case->title }}" loading="lazy" decoding="async"
                          class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
                     @else
                     <div class="w-full h-full flex items-center justify-center">

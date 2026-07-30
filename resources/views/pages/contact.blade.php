@@ -35,8 +35,8 @@ $_schema = [
     {{-- ── HERO ── --}}
     <section class="relative pt-40 pb-24 px-6 overflow-hidden">
         <div class="absolute inset-0">
-            <img src="{{ asset('assets/images/hero/contact.webp') }}" alt=""
-                class="w-full h-full object-cover object-center">
+            <x-responsive-image path="assets/images/hero/contact.webp" alt=""
+                class="w-full h-full object-cover object-center" :priority="true" />
             <div class="absolute inset-0 bg-[#0a0a0a]/75"></div>
             <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(211,30,36,0.08)_0%,transparent_60%)]"></div>
         </div>

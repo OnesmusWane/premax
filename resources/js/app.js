@@ -1,5 +1,3 @@
-import './bootstrap';
-
 document.addEventListener('DOMContentLoaded', () => {
     const widgets = document.querySelectorAll('[data-whatsapp-float]');
 

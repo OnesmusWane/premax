@@ -72,7 +72,7 @@
 <section class="relative h-[55vh] min-h-[420px] flex items-end overflow-hidden">
     <div class="absolute inset-0 z-0">
         <img src="{{ $heroImage }}" alt="{{ $service->name }}"
-             class="w-full h-full object-cover scale-105">
+             class="w-full h-full object-cover scale-105" loading="eager" fetchpriority="high" decoding="async">
         <div class="absolute inset-0 bg-black/60"></div>
         <div class="absolute inset-0 bg-gradient-to-t from-[#111111] via-[#111111]/40 to-transparent"></div>
     </div>

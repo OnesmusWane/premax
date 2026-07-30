@@ -203,6 +203,7 @@
                                             aria-label="Show featured image {{ $loop->iteration }}">
                                         <img src="{{ $item->image_url }}"
                                              alt="{{ $item->alt_text ?? $item->title ?? 'Featured gallery image' }}"
+                                             loading="lazy" decoding="async"
                                              class="h-full w-full object-cover">
                                         <div class="absolute inset-0 bg-black/20"></div>
                                     </button>
